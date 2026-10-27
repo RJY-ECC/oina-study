@@ -38,44 +38,60 @@ const muscles = [
 { day: 2, name: "Deltoid", o: "Lateral one-third of clavicle, acromion and spine of scapula", i: "Deltoid tuberosity", n: "Axillary C5, 6", a: "All: Abduct shoulder. Anterior: Flex, medially rotate, horiz adduct. Posterior: Extend, laterally rotate, horiz abduct." }
 ];
 
-let state = { mode: 'menu', filter: 'all', cardIndex: 0, showAnswer: false, score: 0, total: 0, quizQuestion: null, wrong: [], solved: false };
+let saved = [];
+try { saved = JSON.parse(localStorage.getItem('oina_saved') || '[]'); } catch (e) {}
+function persist() { try { localStorage.setItem('oina_saved', JSON.stringify(saved)); } catch (e) {} }
+
+let state = { mode: 'menu', filter: 'all', deck: [], cardIndex: 0, showAnswer: false, score: 0, total: 0, q: null };
 const appDiv = document.getElementById('app');
 
-function getActiveMuscles() { return state.filter === 'all' ? muscles : muscles.filter(m => m.day === state.filter); }
+function getActive() {
+  if (state.filter === 'saved') return muscles.filter(m => saved.includes(m.name));
+  if (state.filter === 'all') return muscles;
+  return muscles.filter(m => m.day === state.filter);
+}
 function render() {
   if (state.mode === 'menu') renderMenu();
   else if (state.mode === 'flashcards') renderFlashcards();
-  else if (state.mode === 'quiz') renderQuiz();
+  else renderQuiz();
 }
-function setFilter(val) { state.filter = val; render(); }
+function setFilter(v) { state.filter = v; render(); }
 
 function renderMenu() {
-  const f = state.filter;
-  const btn = (v, label) => `<button onclick="setFilter(${typeof v === 'string' ? `'${v}'` : v})" class="flex-1 py-2.5 rounded-lg text-sm font-bold transition ${f === v ? 'bg-white shadow text-blue-600' : 'text-gray-500'}">${label}</button>`;
+  const f = state.filter, n = getActive().length;
+  const btn = (v, label) => `<button onclick="setFilter(${typeof v === 'string' ? `'${v}'` : v})" class="flex-1 py-2.5 rounded-lg text-xs font-bold transition ${f === v ? 'bg-white shadow text-blue-600' : 'text-gray-500'}">${label}</button>`;
+  const off = n === 0 ? 'opacity-40 pointer-events-none' : '';
   appDiv.innerHTML = `
     <header class="mb-6 text-center mt-8"><h1 class="text-3xl font-extrabold text-blue-900">Master OINA App</h1></header>
     <div class="mb-6 bg-white p-4 rounded-2xl shadow-sm border border-gray-200">
       <p class="text-xs font-bold text-gray-400 uppercase tracking-wider text-center mb-3">Select Study Set</p>
-      <div class="flex gap-2 bg-gray-100 p-1.5 rounded-xl">${btn(1,'Day 1')}${btn(2,'Day 2')}${btn('all','All')}</div>
-      <p class="text-center text-sm font-medium text-gray-500 mt-3">${getActiveMuscles().length} Muscles Selected</p>
+      <div class="flex gap-1.5 bg-gray-100 p-1.5 rounded-xl">${btn(1,'Day 1')}${btn(2,'Day 2')}${btn('all','All')}${btn('saved','⭐ Saved (' + saved.length + ')')}</div>
+      <p class="text-center text-sm font-medium text-gray-500 mt-3">${n} Muscles Selected${f === 'saved' && n === 0 ? ' — save cards from the flashcards first' : ''}</p>
     </div>
     <div class="flex flex-col gap-4 mt-2">
-      <button onclick="startFlashcards()" class="bg-blue-600 text-white p-5 rounded-2xl shadow-lg font-bold text-xl active:bg-blue-800 transition transform active:scale-95">📚 Flashcards</button>
-      <button onclick="startQuiz()" class="bg-emerald-600 text-white p-5 rounded-2xl shadow-lg font-bold text-xl active:bg-emerald-800 transition transform active:scale-95">📝 Practice Quiz</button>
+      <button onclick="startFlashcards()" class="${off} bg-blue-600 text-white p-5 rounded-2xl shadow-lg font-bold text-xl active:bg-blue-800 transition transform active:scale-95">📚 Flashcards</button>
+      <button onclick="startQuiz()" class="${off} bg-emerald-600 text-white p-5 rounded-2xl shadow-lg font-bold text-xl active:bg-emerald-800 transition transform active:scale-95">📝 Practice Quiz</button>
     </div>`;
 }
 
-function startFlashcards() { state.mode = 'flashcards'; state.cardIndex = 0; state.showAnswer = false; render(); }
+function startFlashcards() { state.mode = 'flashcards'; state.deck = [...getActive()]; state.cardIndex = 0; state.showAnswer = false; render(); }
 function startQuiz() { state.mode = 'quiz'; state.score = 0; state.total = 0; generateQuestion(); render(); }
 function goMenu() { state.mode = 'menu'; render(); }
 
 function renderFlashcards() {
-  const list = getActiveMuscles();
-  const m = list[state.cardIndex];
+  const d = state.deck, inSaved = state.filter === 'saved';
+  if (d.length === 0) {
+    appDiv.innerHTML = `<button onclick="goMenu()" class="text-blue-600 font-bold mt-4 mb-8 w-full text-center">← Back to Menu</button>
+      <div class="bg-white rounded-3xl shadow-xl p-8 text-center"><p class="text-2xl font-extrabold text-gray-800">Deck empty 🎉</p>
+      <p class="text-gray-500 mt-2">No cards left in this deck.</p>
+      <button onclick="startFlashcards()" class="mt-6 w-full p-4 bg-blue-600 text-white rounded-xl font-bold">Restart deck</button></div>`;
+    return;
+  }
+  const m = d[state.cardIndex];
   appDiv.innerHTML = `
     <header class="mb-4 text-center mt-4">
       <button onclick="goMenu()" class="text-blue-600 font-bold mb-4 flex items-center justify-center w-full">← Back to Menu</button>
-      <p class="text-sm text-gray-500 font-bold">Card ${state.cardIndex + 1} of ${list.length}</p>
+      <p class="text-sm text-gray-500 font-bold">${inSaved ? '⭐ Saved pile · ' : ''}Card ${state.cardIndex + 1} of ${d.length}</p>
     </header>
     <div class="flex-1 flex flex-col items-center justify-center">
       <div onclick="toggleCard()" class="w-full bg-white rounded-3xl shadow-xl p-6 min-h-[350px] flex flex-col justify-center items-center cursor-pointer border border-gray-200 relative overflow-hidden">
@@ -89,18 +105,36 @@ function renderFlashcards() {
           </div>`}
         <p class="absolute bottom-3 text-xs text-gray-400 font-bold tracking-widest uppercase">Tap to flip</p>
       </div>
-      <div class="flex justify-between w-full mt-8 gap-4">
+      <div class="flex w-full mt-6 gap-3">
+        <button onclick="shuffleDeck()" class="flex-1 p-3 bg-purple-100 text-purple-800 rounded-xl font-bold active:bg-purple-200">🔀 Scramble</button>
+        <button onclick="saveCard()" class="flex-1 p-3 ${inSaved ? 'bg-red-100 text-red-800 active:bg-red-200' : 'bg-amber-100 text-amber-800 active:bg-amber-200'} rounded-xl font-bold">${inSaved ? '🗑 Remove from pile' : '⭐ Save to pile'}</button>
+      </div>
+      <div class="flex justify-between w-full mt-3 gap-4">
         <button onclick="prevCard()" class="flex-1 p-4 bg-gray-200 rounded-xl font-bold active:bg-gray-300 ${state.cardIndex === 0 ? 'opacity-50' : ''}">Prev</button>
-        <button onclick="nextCard()" class="flex-1 p-4 bg-blue-600 text-white rounded-xl font-bold active:bg-blue-800 ${state.cardIndex === list.length - 1 ? 'opacity-50' : ''}">Next</button>
+        <button onclick="nextCard()" class="flex-1 p-4 bg-blue-600 text-white rounded-xl font-bold active:bg-blue-800 ${state.cardIndex === d.length - 1 ? 'opacity-50' : ''}">Next</button>
       </div>
     </div>`;
 }
 function toggleCard() { state.showAnswer = !state.showAnswer; render(); }
 function prevCard() { if (state.cardIndex > 0) { state.cardIndex--; state.showAnswer = false; render(); } }
-function nextCard() { if (state.cardIndex < getActiveMuscles().length - 1) { state.cardIndex++; state.showAnswer = false; render(); } }
+function nextCard() { if (state.cardIndex < state.deck.length - 1) { state.cardIndex++; state.showAnswer = false; render(); } }
+function shuffleDeck() {
+  const d = state.deck;
+  for (let i = d.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [d[i], d[j]] = [d[j], d[i]]; }
+  state.cardIndex = 0; state.showAnswer = false; render();
+}
+function saveCard() {
+  const m = state.deck[state.cardIndex];
+  if (state.filter === 'saved') saved = saved.filter(n => n !== m.name);
+  else if (!saved.includes(m.name)) saved.push(m.name);
+  persist();
+  state.deck.splice(state.cardIndex, 1);
+  if (state.cardIndex >= state.deck.length) state.cardIndex = Math.max(0, state.deck.length - 1);
+  state.showAnswer = false; render();
+}
 
 function generateQuestion() {
-  const list = getActiveMuscles();
+  const list = getActive();
   const target = list[Math.floor(Math.random() * list.length)];
   const props = ['o', 'i', 'n', 'a'];
   const propMap = { o: 'Origin', i: 'Insertion', n: 'Nerve', a: 'Action' };
@@ -111,42 +145,27 @@ function generateQuestion() {
     if (!options.includes(opt)) options.push(opt);
   }
   options.sort(() => Math.random() - 0.5);
-  state.quizQuestion = { muscle: target.name, property: propMap[p], answer: target[p], options };
-  state.wrong = [];
-  state.solved = false;
+  state.q = { muscle: target.name, property: propMap[p], answer: target[p], options, wrong: [], solved: false, counted: false };
 }
-
-function handleAnswer(idx) {
-  if (state.solved || state.wrong.includes(idx)) return;
-  const q = state.quizQuestion;
-  if (q.options[idx] === q.answer) {
-    state.solved = true;
-    state.correctIdx = idx;
-    state.total++;
-    if (state.wrong.length === 0) state.score++;
-  } else {
-    state.wrong.push(idx);
-  }
+function handleAnswer(i) {
+  const q = state.q;
+  if (q.solved || q.wrong.includes(i)) return;
+  const correct = q.options[i] === q.answer;
+  if (!q.counted) { q.counted = true; state.total++; if (correct) state.score++; }
+  if (correct) q.solved = true; else q.wrong.push(i);
   render();
 }
-
-function nextQuestion() {
-  if (!state.solved) return;
-  generateQuestion();
-  render();
-  window.scrollTo(0, 0);
-}
+function nextQuestion() { generateQuestion(); render(); window.scrollTo(0, 0); }
 
 function renderQuiz() {
-  const q = state.quizQuestion;
-  const optHtml = q.options.map((opt, i) => {
-    let cls = 'bg-white border-slate-200 text-slate-700 active:border-blue-500 active:bg-blue-50';
-    let mark = '';
-    if (state.wrong.includes(i)) { cls = 'bg-red-100 border-red-400 text-red-800'; mark = '❌ '; }
-    else if (state.solved && i === state.correctIdx) { cls = 'bg-green-100 border-green-500 text-green-900'; mark = '✅ '; }
-    else if (state.solved) { cls = 'bg-white border-slate-200 text-slate-400'; }
-    return `<button onclick="handleAnswer(${i})" class="text-left border-2 p-4 rounded-xl shadow-sm transition text-sm font-medium leading-relaxed ${cls}">${mark}${opt}</button>`;
-  }).join('');
+  const q = state.q;
+  const cls = i => {
+    const base = 'text-left border-2 p-4 rounded-xl shadow-sm transition text-sm font-medium leading-relaxed ';
+    if (q.solved && q.options[i] === q.answer) return base + 'bg-green-100 border-green-500 text-green-900';
+    if (q.wrong.includes(i)) return base + 'bg-red-100 border-red-500 text-red-900 opacity-80';
+    return base + 'bg-white border-slate-200 text-slate-700 active:border-blue-500 active:bg-blue-50';
+  };
+  const mark = i => (q.solved && q.options[i] === q.answer) ? '✅ ' : q.wrong.includes(i) ? '❌ ' : '';
   appDiv.innerHTML = `
     <header class="mb-4 text-center mt-4 flex justify-between items-center w-full px-2">
       <button onclick="goMenu()" class="text-blue-600 font-bold">← Menu</button>
@@ -157,8 +176,11 @@ function renderQuiz() {
         <h3 class="text-gray-600 font-medium text-sm">What is the <strong class="text-blue-700 uppercase tracking-wide">${q.property}</strong> of the:</h3>
         <h2 class="text-2xl font-black text-gray-900 mt-2">${q.muscle}?</h2>
       </div>
-      <div class="flex flex-col gap-3">${optHtml}</div>
-      ${state.solved ? `<button onclick="nextQuestion()" class="mt-6 bg-blue-600 text-white p-4 rounded-xl font-bold text-lg shadow-lg active:bg-blue-800 transition transform active:scale-95">Next →</button>` : ''}
+      <div class="flex flex-col gap-3">
+        ${q.options.map((opt, i) => `<button onclick="handleAnswer(${i})" class="${cls(i)}">${mark(i)}${opt}</button>`).join('')}
+      </div>
+      ${q.solved ? `<p class="mt-5 text-center font-bold text-green-700">${q.wrong.length ? 'Got it — now you know!' : '🎯 Correct on the first try!'}</p>` : (q.wrong.length ? `<p class="mt-5 text-center font-bold text-red-700">Not quite — try again.</p>` : '')}
+      <button onclick="nextQuestion()" class="mt-4 w-full p-4 rounded-xl font-bold text-white ${q.solved ? 'bg-blue-600 active:bg-blue-800' : 'bg-slate-400 active:bg-slate-500'}">Next →</button>
     </div>`;
 }
 render();
