@@ -38,7 +38,7 @@ const muscles = [
 { day: 2, name: "Deltoid", o: "Lateral one-third of clavicle, acromion and spine of scapula", i: "Deltoid tuberosity", n: "Axillary C5, 6", a: "All: Abduct shoulder. Anterior: Flex, medially rotate, horiz adduct. Posterior: Extend, laterally rotate, horiz abduct." }
 ];
 
-let state = { mode: 'menu', filter: 'all', cardIndex: 0, showAnswer: false, score: 0, quizQuestion: null, feedback: null };
+let state = { mode: 'menu', filter: 'all', cardIndex: 0, showAnswer: false, score: 0, total: 0, quizQuestion: null, wrong: [], solved: false };
 const appDiv = document.getElementById('app');
 
 function getActiveMuscles() { return state.filter === 'all' ? muscles : muscles.filter(m => m.day === state.filter); }
@@ -66,7 +66,7 @@ function renderMenu() {
 }
 
 function startFlashcards() { state.mode = 'flashcards'; state.cardIndex = 0; state.showAnswer = false; render(); }
-function startQuiz() { state.mode = 'quiz'; state.score = 0; generateQuestion(); render(); }
+function startQuiz() { state.mode = 'quiz'; state.score = 0; state.total = 0; generateQuestion(); render(); }
 function goMenu() { state.mode = 'menu'; render(); }
 
 function renderFlashcards() {
@@ -112,40 +112,53 @@ function generateQuestion() {
   }
   options.sort(() => Math.random() - 0.5);
   state.quizQuestion = { muscle: target.name, property: propMap[p], answer: target[p], options };
-  state.feedback = null;
+  state.wrong = [];
+  state.solved = false;
 }
 
 function handleAnswer(idx) {
-  if (state.feedback) return;
+  if (state.solved || state.wrong.includes(idx)) return;
   const q = state.quizQuestion;
   if (q.options[idx] === q.answer) {
-    state.score++;
-    state.feedback = { type: 'success', text: '✅ Correct!' };
-    render();
-    setTimeout(() => { generateQuestion(); render(); }, 1200);
+    state.solved = true;
+    state.correctIdx = idx;
+    state.total++;
+    if (state.wrong.length === 0) state.score++;
   } else {
-    state.feedback = { type: 'error', text: `❌ Incorrect. Answer: ${q.answer}` };
-    render();
-    setTimeout(() => { generateQuestion(); render(); }, 4000);
+    state.wrong.push(idx);
   }
+  render();
+}
+
+function nextQuestion() {
+  if (!state.solved) return;
+  generateQuestion();
+  render();
+  window.scrollTo(0, 0);
 }
 
 function renderQuiz() {
   const q = state.quizQuestion;
+  const optHtml = q.options.map((opt, i) => {
+    let cls = 'bg-white border-slate-200 text-slate-700 active:border-blue-500 active:bg-blue-50';
+    let mark = '';
+    if (state.wrong.includes(i)) { cls = 'bg-red-100 border-red-400 text-red-800'; mark = '❌ '; }
+    else if (state.solved && i === state.correctIdx) { cls = 'bg-green-100 border-green-500 text-green-900'; mark = '✅ '; }
+    else if (state.solved) { cls = 'bg-white border-slate-200 text-slate-400'; }
+    return `<button onclick="handleAnswer(${i})" class="text-left border-2 p-4 rounded-xl shadow-sm transition text-sm font-medium leading-relaxed ${cls}">${mark}${opt}</button>`;
+  }).join('');
   appDiv.innerHTML = `
     <header class="mb-4 text-center mt-4 flex justify-between items-center w-full px-2">
       <button onclick="goMenu()" class="text-blue-600 font-bold">← Menu</button>
-      <span class="font-bold text-gray-700 bg-gray-200 px-4 py-1 rounded-full shadow-inner">Score: ${state.score}</span>
+      <span class="font-bold text-gray-700 bg-gray-200 px-4 py-1 rounded-full shadow-inner">First-try: ${state.score}/${state.total}</span>
     </header>
     <div class="flex-1 flex flex-col w-full pb-8">
       <div class="bg-white rounded-2xl shadow-md p-5 mb-6 border-t-4 border-blue-600">
         <h3 class="text-gray-600 font-medium text-sm">What is the <strong class="text-blue-700 uppercase tracking-wide">${q.property}</strong> of the:</h3>
         <h2 class="text-2xl font-black text-gray-900 mt-2">${q.muscle}?</h2>
       </div>
-      <div class="flex flex-col gap-3">
-        ${q.options.map((opt, i) => `<button onclick="handleAnswer(${i})" class="text-left bg-white border-2 border-slate-200 p-4 rounded-xl shadow-sm active:border-blue-500 active:bg-blue-50 transition text-sm font-medium text-slate-700 leading-relaxed">${opt}</button>`).join('')}
-      </div>
-      ${state.feedback ? `<div class="mt-6 p-4 rounded-xl font-bold text-center shadow-sm ${state.feedback.type === 'success' ? 'bg-green-100 text-green-800 border border-green-300' : 'bg-red-100 text-red-800 border border-red-300'}">${state.feedback.text}</div>` : ''}
+      <div class="flex flex-col gap-3">${optHtml}</div>
+      ${state.solved ? `<button onclick="nextQuestion()" class="mt-6 bg-blue-600 text-white p-4 rounded-xl font-bold text-lg shadow-lg active:bg-blue-800 transition transform active:scale-95">Next →</button>` : ''}
     </div>`;
 }
 render();
