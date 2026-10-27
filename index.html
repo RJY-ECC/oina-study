@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1e3a8a">
+<title>OINA Master Study App</title>
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{background:#f1f5f9;color:#1e293b;-webkit-user-select:none;user-select:none}</style>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans antialiased select-none">
+<div id="app" class="max-w-md mx-auto min-h-screen p-4 flex flex-col"></div>
+<script>
+const muscles = [
+{ day: 1, name: "Sternocleidomastoid", o: "Sternal head: Top of manubrium. Clavicular head: Medial one-third of clavicle", i: "Mastoid process of temporal bone and lateral portion of superior nuchal line of occiput", n: "Spinal accessory (XI), C2, 3", a: "Unilaterally: Laterally flex head/neck to same side, Rotate to opposite side. Bilaterally: Flex neck, assist to elevate rib cage" },
+{ day: 1, name: "Posterior Scalene", o: "Transverse processes of 6th and 7th cervical vertebrae", i: "Second rib", n: "C(3), 4-8", a: "Unilaterally: Laterally flex head/neck to same side, Rotate to opposite side. Bilaterally: Elevate 2nd rib" },
+{ day: 1, name: "Anterior Scalene", o: "Transverse processes of 3rd through 6th cervical vertebrae", i: "First rib", n: "C(3), 4-8", a: "Unilaterally: Laterally flex head/neck to same side, Rotate to opposite side. Bilaterally: Elevate 1st rib, Flex head/neck" },
+{ day: 1, name: "Middle Scalene", o: "Transverse processes of 2nd through 7th cervical vertebrae", i: "First rib", n: "C(3), 4-8", a: "Unilaterally: Laterally flex head/neck to same side, Rotate to opposite side. Bilaterally: Elevate 1st rib" },
+{ day: 1, name: "Oblique Capitis Superior", o: "Transverse process of the atlas (C-1)", i: "Between the nuchal lines of the occiput", n: "Suboccipital", a: "Rock and tilt the head back into extension. Laterally flex the head to the same side" },
+{ day: 1, name: "Oblique Capitis Inferior", o: "Spinous process of the axis (C-2)", i: "Transverse process of the atlas (C-1)", n: "Suboccipital", a: "Rotate the head to the same side" },
+{ day: 1, name: "Rectus Capitis Posterior Minor", o: "Tubercle of the posterior arch of the atlas (C-1)", i: "Inferior nuchal line of the occiput", n: "Suboccipital", a: "Rock and tilt the head back into extension" },
+{ day: 1, name: "Rectus Capitis Posterior Major", o: "Spinous process of the axis (C-2)", i: "Inferior nuchal line of the occiput", n: "Suboccipital", a: "Rock and tilt the head back into extension. Rotate the head to the same side" },
+{ day: 1, name: "Splenius Cervicis", o: "Spinous processes of T-3 to T-6", i: "Transverse processes of C-1 to C-3", n: "Cervical", a: "Unilaterally: Rotate head/neck to same side, Laterally flex to same side. Bilaterally: Extend head/neck" },
+{ day: 1, name: "Splenius Capitis", o: "Inferior one-half of ligamentum nuchae and spinous processes of C-7 to T-4", i: "Mastoid process and lateral portion of superior nuchal line", n: "Cervical", a: "Unilaterally: Rotate head/neck to same side, Laterally flex to same side. Bilaterally: Extend head/neck" },
+{ day: 1, name: "Longus Capitis", o: "Transverse processes of C-3 through C-6", i: "Inferior surface of occiput", n: "C1, 2, 3, (4)", a: "Unilaterally: Laterally flex head/neck to same side, Rotate to same side. Bilaterally: Flex head/neck" },
+{ day: 1, name: "Longus Colli", o: "Bodies of C-5 through T-3, transverse processes of C-3 through C-5", i: "Tubercle on anterior arch of atlas; bodies of axis, C-3, C-4; transverse processes of C-5, C-6", n: "C2-6, (7)", a: "Unilaterally: Laterally flex head/neck to same side, Rotate to same side. Bilaterally: Flex head/neck" },
+{ day: 1, name: "Rectus Capitis Anterior", o: "Transverse process of C1", i: "Basilar surface", n: "C1-C2", a: "Head flexion, Stabilize head at OA joint" },
+{ day: 1, name: "Rectus Capitis Lateralis", o: "Transverse process of C1", i: "Jugular process", n: "C1-C2", a: "Ipsilateral lateral flexion, Stabilize OA joint" },
+{ day: 2, name: "Latissimus Dorsi", o: "Inferior angle of scapula, spinous processes of last six thoracic vertebrae, last 3-4 ribs, thoracolumbar aponeurosis and posterior iliac crest", i: "Intertubercular groove of the humerus", n: "Thoracodorsal C6, 7, 8", a: "Extend, adduct, and medially rotate the shoulder (G/H joint)" },
+{ day: 2, name: "Subclavius", o: "First rib and cartilage", i: "Inferior surface of middle one-third of clavicle", n: "Subclavian C5, 6", a: "Depress the clavicle, Elevate first rib, Stabilize sternoclavicular joint" },
+{ day: 2, name: "Serratus Anterior", o: "External surfaces of upper eight or nine ribs", i: "Anterior surface of medial border of the scapula", n: "Long thoracic C5, 6, 7, 8", a: "Abduct, upwardly rotate, and depress the scapula. Hold medial border against rib cage. May elevate thorax." },
+{ day: 2, name: "Pectoralis Minor", o: "Third, fourth and fifth ribs", i: "Medial surface of coracoid process of the scapula", n: "Medial pectoral, with fibers from communicating branch of lateral pectoral C(6), 7, 8, T1", a: "Depress, abduct, and downwardly rotate the scapula. Assist to elevate thorax." },
+{ day: 2, name: "Pectoralis Major", o: "Medial half of clavicle, sternum and cartilage of first through sixth ribs", i: "Crest of greater tubercle of humerus", n: "Upper fibers: Lateral pectoral C5, 6, 7. Lower fibers: Lateral/medial pectoral C6, 7, 8, T1", a: "Adduct & medially rotate shoulder. Upper fibers flex & horiz. adduct. Lower fibers extend." },
+{ day: 2, name: "Levator Scapula", o: "Transverse processes of first through fourth cervical vertebrae", i: "Medial border of scapula, between superior angle and superior portion of spine of scapula", n: "Cervical 3, 4, and Dorsal scapular C4, 5", a: "Unilaterally: Elevate & downwardly rotate scapula, laterally flex/rotate head & neck. Bilaterally: Extend head/neck." },
+{ day: 2, name: "Trapezius", o: "External occipital protuberance, medial superior nuchal line, ligamentum nuchae and spinous processes C-7 to T-12", i: "Lateral one-third of clavicle, acromion and spine of the scapula", n: "Spinal portion of cranial nerve XI (accessory) and ventral ramus C2, 3, 4", a: "Upper: Extend, lat flex, rotate head; Elevate/upwardly rotate scapula. Middle: Adduct/stabilize scapula. Lower: Depress/upwardly rotate scapula." },
+{ day: 2, name: "Rhomboid Major", o: "Spinous processes of T-2 to T-5", i: "Medial border of the scapula between the spine of the scapula and inferior angle", n: "Dorsal scapular C4, 5", a: "Adduct, elevate, and downwardly rotate the scapula (S/T joint)" },
+{ day: 2, name: "Rhomboid Minor", o: "Spinous processes of C-7 and T-1", i: "Upper portion of medial border of the scapula, at the level of the spine of the scapula", n: "Dorsal scapular C4, 5", a: "Adduct, elevate, and downwardly rotate the scapula (S/T joint)" },
+{ day: 2, name: "Deltoid", o: "Lateral one-third of clavicle, acromion and spine of scapula", i: "Deltoid tuberosity", n: "Axillary C5, 6", a: "All: Abduct shoulder. Anterior: Flex, medially rotate, horiz adduct. Posterior: Extend, laterally rotate, horiz abduct." }
+];
+
+let state = { mode: 'menu', filter: 'all', cardIndex: 0, showAnswer: false, score: 0, quizQuestion: null, feedback: null };
+const appDiv = document.getElementById('app');
+
+function getActiveMuscles() { return state.filter === 'all' ? muscles : muscles.filter(m => m.day === state.filter); }
+function render() {
+  if (state.mode === 'menu') renderMenu();
+  else if (state.mode === 'flashcards') renderFlashcards();
+  else if (state.mode === 'quiz') renderQuiz();
+}
+function setFilter(val) { state.filter = val; render(); }
+
+function renderMenu() {
+  const f = state.filter;
+  const btn = (v, label) => `<button onclick="setFilter(${typeof v === 'string' ? `'${v}'` : v})" class="flex-1 py-2.5 rounded-lg text-sm font-bold transition ${f === v ? 'bg-white shadow text-blue-600' : 'text-gray-500'}">${label}</button>`;
+  appDiv.innerHTML = `
+    <header class="mb-6 text-center mt-8"><h1 class="text-3xl font-extrabold text-blue-900">Master OINA App</h1></header>
+    <div class="mb-6 bg-white p-4 rounded-2xl shadow-sm border border-gray-200">
+      <p class="text-xs font-bold text-gray-400 uppercase tracking-wider text-center mb-3">Select Study Set</p>
+      <div class="flex gap-2 bg-gray-100 p-1.5 rounded-xl">${btn(1,'Day 1')}${btn(2,'Day 2')}${btn('all','All')}</div>
+      <p class="text-center text-sm font-medium text-gray-500 mt-3">${getActiveMuscles().length} Muscles Selected</p>
+    </div>
+    <div class="flex flex-col gap-4 mt-2">
+      <button onclick="startFlashcards()" class="bg-blue-600 text-white p-5 rounded-2xl shadow-lg font-bold text-xl active:bg-blue-800 transition transform active:scale-95">📚 Flashcards</button>
+      <button onclick="startQuiz()" class="bg-emerald-600 text-white p-5 rounded-2xl shadow-lg font-bold text-xl active:bg-emerald-800 transition transform active:scale-95">📝 Practice Quiz</button>
+    </div>`;
+}
+
+function startFlashcards() { state.mode = 'flashcards'; state.cardIndex = 0; state.showAnswer = false; render(); }
+function startQuiz() { state.mode = 'quiz'; state.score = 0; generateQuestion(); render(); }
+function goMenu() { state.mode = 'menu'; render(); }
+
+function renderFlashcards() {
+  const list = getActiveMuscles();
+  const m = list[state.cardIndex];
+  appDiv.innerHTML = `
+    <header class="mb-4 text-center mt-4">
+      <button onclick="goMenu()" class="text-blue-600 font-bold mb-4 flex items-center justify-center w-full">← Back to Menu</button>
+      <p class="text-sm text-gray-500 font-bold">Card ${state.cardIndex + 1} of ${list.length}</p>
+    </header>
+    <div class="flex-1 flex flex-col items-center justify-center">
+      <div onclick="toggleCard()" class="w-full bg-white rounded-3xl shadow-xl p-6 min-h-[350px] flex flex-col justify-center items-center cursor-pointer border border-gray-200 relative overflow-hidden">
+        ${!state.showAnswer ? `<h2 class="text-3xl font-extrabold text-center text-gray-800 px-2">${m.name}</h2>` : `
+          <div class="w-full text-left space-y-4 overflow-y-auto pb-6">
+            <h3 class="text-xl font-bold text-center text-blue-900 border-b pb-2">${m.name}</h3>
+            <p class="text-sm sm:text-base"><strong class="text-red-600">O:</strong> ${m.o}</p>
+            <p class="text-sm sm:text-base"><strong class="text-blue-600">I:</strong> ${m.i}</p>
+            <p class="text-sm sm:text-base"><strong class="text-yellow-600">N:</strong> ${m.n}</p>
+            <p class="text-sm sm:text-base"><strong class="text-green-600">A:</strong> ${m.a}</p>
+          </div>`}
+        <p class="absolute bottom-3 text-xs text-gray-400 font-bold tracking-widest uppercase">Tap to flip</p>
+      </div>
+      <div class="flex justify-between w-full mt-8 gap-4">
+        <button onclick="prevCard()" class="flex-1 p-4 bg-gray-200 rounded-xl font-bold active:bg-gray-300 ${state.cardIndex === 0 ? 'opacity-50' : ''}">Prev</button>
+        <button onclick="nextCard()" class="flex-1 p-4 bg-blue-600 text-white rounded-xl font-bold active:bg-blue-800 ${state.cardIndex === list.length - 1 ? 'opacity-50' : ''}">Next</button>
+      </div>
+    </div>`;
+}
+function toggleCard() { state.showAnswer = !state.showAnswer; render(); }
+function prevCard() { if (state.cardIndex > 0) { state.cardIndex--; state.showAnswer = false; render(); } }
+function nextCard() { if (state.cardIndex < getActiveMuscles().length - 1) { state.cardIndex++; state.showAnswer = false; render(); } }
+
+function generateQuestion() {
+  const list = getActiveMuscles();
+  const target = list[Math.floor(Math.random() * list.length)];
+  const props = ['o', 'i', 'n', 'a'];
+  const propMap = { o: 'Origin', i: 'Insertion', n: 'Nerve', a: 'Action' };
+  const p = props[Math.floor(Math.random() * props.length)];
+  const options = [target[p]];
+  while (options.length < 4) {
+    const opt = muscles[Math.floor(Math.random() * muscles.length)][p];
+    if (!options.includes(opt)) options.push(opt);
+  }
+  options.sort(() => Math.random() - 0.5);
+  state.quizQuestion = { muscle: target.name, property: propMap[p], answer: target[p], options };
+  state.feedback = null;
+}
+
+function handleAnswer(idx) {
+  if (state.feedback) return;
+  const q = state.quizQuestion;
+  if (q.options[idx] === q.answer) {
+    state.score++;
+    state.feedback = { type: 'success', text: '✅ Correct!' };
+    render();
+    setTimeout(() => { generateQuestion(); render(); }, 1200);
+  } else {
+    state.feedback = { type: 'error', text: `❌ Incorrect. Answer: ${q.answer}` };
+    render();
+    setTimeout(() => { generateQuestion(); render(); }, 4000);
+  }
+}
+
+function renderQuiz() {
+  const q = state.quizQuestion;
+  appDiv.innerHTML = `
+    <header class="mb-4 text-center mt-4 flex justify-between items-center w-full px-2">
+      <button onclick="goMenu()" class="text-blue-600 font-bold">← Menu</button>
+      <span class="font-bold text-gray-700 bg-gray-200 px-4 py-1 rounded-full shadow-inner">Score: ${state.score}</span>
+    </header>
+    <div class="flex-1 flex flex-col w-full pb-8">
+      <div class="bg-white rounded-2xl shadow-md p-5 mb-6 border-t-4 border-blue-600">
+        <h3 class="text-gray-600 font-medium text-sm">What is the <strong class="text-blue-700 uppercase tracking-wide">${q.property}</strong> of the:</h3>
+        <h2 class="text-2xl font-black text-gray-900 mt-2">${q.muscle}?</h2>
+      </div>
+      <div class="flex flex-col gap-3">
+        ${q.options.map((opt, i) => `<button onclick="handleAnswer(${i})" class="text-left bg-white border-2 border-slate-200 p-4 rounded-xl shadow-sm active:border-blue-500 active:bg-blue-50 transition text-sm font-medium text-slate-700 leading-relaxed">${opt}</button>`).join('')}
+      </div>
+      ${state.feedback ? `<div class="mt-6 p-4 rounded-xl font-bold text-center shadow-sm ${state.feedback.type === 'success' ? 'bg-green-100 text-green-800 border border-green-300' : 'bg-red-100 text-red-800 border border-red-300'}">${state.feedback.text}</div>` : ''}
+    </div>`;
+}
+render();
+</script>
+</body>
+</html>
