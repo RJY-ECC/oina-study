@@ -28,6 +28,7 @@ h1{margin:.8rem 0 0;font-size:1.9rem;font-weight:800;color:var(--head);letter-sp
 .seg,.chips{display:flex;gap:.35rem;background:var(--soft);padding:.3rem;border-radius:.9rem}
 .seg button,.chips button{flex:1;padding:.6rem .2rem;background:none;font-size:.78rem;font-weight:700;color:var(--mute)}
 .seg button.on,.chips button.on{background:var(--card);color:var(--brand);box-shadow:0 1px 3px #0003}
+.seg{flex-wrap:wrap}
 .count{margin:.7rem 0 0;text-align:center;font-size:.85rem;color:var(--mute);font-weight:500}
 .big{padding:1.15rem;font-size:1.2rem;font-weight:700;color:#fff;box-shadow:0 6px 14px -6px #0006}
 .blue{background:#2563eb}.green{background:#059669}
@@ -43,7 +44,7 @@ h1{margin:.8rem 0 0;font-size:1.9rem;font-weight:800;color:var(--head);letter-sp
 .fc{flex:1;min-height:21rem;background:var(--card);border:1px solid var(--line);border-radius:1.75rem;box-shadow:0 10px 25px -12px #0004;padding:1.5rem;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;cursor:pointer;animation:pop .18s ease-out}
 @keyframes pop{from{opacity:.4;transform:scale(.97)}to{opacity:1;transform:none}}
 .fc h2{margin:0;font-size:1.9rem;font-weight:800;text-align:center}
-.fc h3{margin:0 0 .6rem;padding-bottom:.5rem;border-bottom:1px solid var(--line);text-align:center;font-size:1.2rem;color:var(--head)}
+.fc h3,.q h3{margin:0 0 .6rem;padding-bottom:.5rem;border-bottom:1px solid var(--line);text-align:center;font-size:1.2rem;color:var(--head)}
 .back-face{width:100%;max-height:26rem;overflow-y:auto;text-align:left}
 .fact{margin:.55rem 0;font-size:.95rem}
 .fact b{font-weight:800}
@@ -51,9 +52,13 @@ h1{margin:.8rem 0 0;font-size:1.9rem;font-weight:800;color:var(--head);letter-sp
 .row{display:flex;gap:.7rem}
 .row button{flex:1;padding:.85rem;font-weight:700}
 .amber{background:var(--amber);color:var(--amberi)}.purple{background:var(--purp);color:var(--purpi)}.red{background:var(--badbg);color:var(--bad)}.gray{background:var(--soft)}.prime{background:var(--brand);color:#fff}
-.q{border-top:4px solid var(--brand)}
-.q p{margin:0;color:var(--mute);font-size:.85rem}.q b{color:var(--brand);text-transform:uppercase;letter-spacing:.05em}
-.q h2{margin:.4rem 0 0;font-size:1.5rem;font-weight:800;line-height:1.2}
+.q{border-top:4px solid var(--brand);cursor:pointer}
+.q.pop{animation:pop .18s ease-out}
+.qq p{margin:0;color:var(--mute);font-size:.85rem}.qq b{color:var(--brand);text-transform:uppercase;letter-spacing:.05em}
+.qq h2{margin:.4rem 0 0;font-size:1.5rem;font-weight:800;line-height:1.2}
+.qnote{display:block;margin-top:.3rem;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mute);opacity:.85}
+.q .back-face{max-height:20rem}
+.q .qnote.ret{text-align:center;margin-top:.7rem}
 .tag{display:inline-block;margin-top:.5rem;font-size:.7rem;font-weight:700;color:var(--mute);background:var(--soft);border-radius:99px;padding:.1rem .6rem}
 .opts{display:flex;flex-direction:column;gap:.6rem}
 .opt{display:flex;gap:.7rem;text-align:left;padding:.9rem;background:var(--card);border:2px solid var(--line);font-size:.9rem;font-weight:500;line-height:1.4}
@@ -61,7 +66,7 @@ h1{margin:.8rem 0 0;font-size:1.9rem;font-weight:800;color:var(--head);letter-sp
 .opt.ok{background:var(--okbg);border-color:var(--ok)}.opt.no{background:var(--badbg);border-color:var(--bad);opacity:.8}
 .msg{margin:0;text-align:center;font-weight:700}
 .msg.ok{color:var(--ok)}.msg.no{color:var(--bad)}
-.empty{text-align:center;padding:2rem 1rem}.empty h2{margin:0;font-size:1.5rem}.empty p{color:var(--mute)}
+.empty{text-align:center;padding:2rem 1rem}.empty .score{margin:.6rem 0 .2rem;font-size:3.2rem;font-weight:800;color:var(--head);line-height:1}.empty h2{margin:0;font-size:1.5rem}.empty p{color:var(--mute)}
 #toast{position:fixed;left:50%;bottom:calc(1.5rem + env(safe-area-inset-bottom));transform:translate(-50%,2rem);background:#0f172a;color:#fff;padding:.6rem 1.1rem;border-radius:99px;font-size:.85rem;font-weight:600;opacity:0;pointer-events:none;transition:.2s}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 @media(hover:hover){.big:hover{filter:brightness(1.08)}.opt:hover:not(.ok):not(.no){border-color:var(--brand)}}
@@ -97,13 +102,23 @@ const muscles = [
 { day: 2, name: "Latissimus Dorsi", o: "Inferior angle of scapula, spinous processes of last six thoracic vertebrae, last 3-4 ribs, thoracolumbar aponeurosis and posterior iliac crest", i: "Intertubercular groove of the humerus", n: "Thoracodorsal C<b>6, 7, 8</b>", a: "Extend, adduct, and medially rotate the shoulder (G/H joint)", notes: ["Origin = Inferior angle of scapula, Spinous process of T7-T12, Last 3-4 Ribs, Thoracolumbar Aponeurosis and Posterior iliac crest", "<i>*The thoracolumbar aponeurosis is a large sheet of connective tissue that covers/attaches to spinous process of L1-L5, Sacrum and Posterior iliac crest*</i>"] },
 { day: 2, name: "Subclavius", o: "First rib and cartilage", i: "Inferior surface of middle one-third of clavicle", n: "Subclavian C<b>5, 6</b>", a: "Depress the clavicle, Elevate first rib, Stabilize sternoclavicular joint" },
 { day: 2, name: "Serratus Anterior", o: "External surfaces of upper eight or nine ribs", i: "Anterior surface of medial border of the scapula", n: "Long thoracic C<b>5, 6, 7</b>, 8", a: "Abduct, upwardly rotate, and depress the scapula. Hold medial border against rib cage. May elevate thorax." },
-{ day: 2, name: "Pectoralis Minor", o: "Third, fourth and fifth ribs", i: "Medial surface of coracoid process of the scapula", n: "Medial pectoral, with fibers from communicating branch of lateral pectoral C(6), <b>7, 8</b>, T1", a: "Depress, abduct, and downwardly rotate the scapula. Assist to elevate thorax.", notes: ["Nerve = Medial Pectoral Nerve, Lateral Pectoral Nerve, LPN (C5-T7)"] },
+{ day: 2, name: "Pectoralis Minor", o: "Third, fourth and fifth ribs", i: "Medial surface of coracoid process of the scapula", n: "Medial pectoral, with fibers from communicating branch of lateral pectoral C(6), <b>7, 8</b>, T1", a: "Depress, abduct, and downwardly rotate the scapula. Assist to elevate thorax.", notes: ["Nerve = Medial Pectoral Nerve, MPN (C8-T1), and LPN, Lateral Pectoral Nerve (C5-C7)"] },
 { day: 2, name: "Pectoralis Major", o: "Medial half of clavicle, sternum and cartilage of first through sixth ribs", i: "Crest of greater tubercle of humerus", n: "Upper fibers: Lateral pectoral C<b>5, 6, 7</b>. Lower fibers: Lateral/medial pectoral C<b>6, 7, 8</b>, <b>T1</b>", a: "Adduct & medially rotate shoulder. Upper fibers flex & horiz. adduct. Lower fibers extend.", notes: ["Nerve = Lateral Pectoral Nerve, LPN (C5-C7) and Medial Pectoral Nerve, MPN (C8-T1)"] },
 { day: 2, name: "Levator Scapula", o: "Transverse processes of first through fourth cervical vertebrae", i: "Medial border of scapula, between superior angle and superior portion of spine of scapula", n: "Cervical <b>3, 4</b>, and Dorsal scapular C4, <b>5</b>", a: "Unilaterally: Elevate & downwardly rotate scapula, laterally flex/rotate head & neck. Bilaterally: Extend head/neck.", notes: ["Origin = Transverse Process of C1-C4", "Nerve = (Cervical 3,4 = Part of Cervical Plexus) and DSN (C4-C5)"] },
 { day: 2, name: "Trapezius", o: "External occipital protuberance, medial superior nuchal line, ligamentum nuchae and spinous processes C-7 to T-12", i: "Lateral one-third of clavicle, acromion and spine of the scapula", n: "Spinal portion of cranial nerve XI (accessory) and ventral ramus C2, <b>3, 4</b>", a: "Upper: Extend, lat flex, rotate head; Elevate/upwardly rotate scapula. Middle: Adduct/stabilize scapula. Lower: Depress/upwardly rotate scapula.", notes: ["Nerve = Cranial Nerve 11 (Accessory) for Motor and Ventral Ramus C2-C4 for Sensory"] },
 { day: 2, name: "Rhomboid Major", o: "Spinous processes of T-2 to T-5", i: "Medial border of the scapula between the spine of the scapula and inferior angle", n: "Dorsal scapular C4, <b>5</b>", a: "Adduct, elevate, and downwardly rotate the scapula (S/T joint)" },
 { day: 2, name: "Rhomboid Minor", o: "Spinous processes of C-7 and T-1", i: "Upper portion of medial border of the scapula, at the level of the spine of the scapula", n: "Dorsal scapular C4, <b>5</b>", a: "Adduct, elevate, and downwardly rotate the scapula (S/T joint)" },
-{ day: 2, name: "Deltoid", o: "Lateral one-third of clavicle, acromion and spine of scapula", i: "Deltoid tuberosity", n: "Axillary C<b>5, 6</b>", a: "All: Abduct shoulder. Anterior: Flex, medially rotate, horiz adduct. Posterior: Extend, laterally rotate, horiz abduct." }
+{ day: 2, name: "Deltoid", o: "Lateral one-third of clavicle, acromion and spine of scapula", i: "Deltoid tuberosity", n: "Axillary C<b>5, 6</b>", a: "All: Abduct shoulder. Anterior: Flex, medially rotate, horiz adduct. Posterior: Extend, laterally rotate, horiz abduct." },
+{ day: 3, name: "Biceps Brachii", o: "Short head: Coracoid process of scapula. Long head: Supraglenoid tubercle of scapula", i: "Tuberosity of the radius and aponeurosis of the biceps brachii", n: "Musculocutaneous C<b>5, 6</b>", a: "Flex the elbow (humeroulnar joint). Supinate the forearm (radioulnar joints). Flex the shoulder (glenohumeral joint)", notes: ["<i>*Bicipital aponeurosis</i>"] },
+{ day: 3, name: "Brachialis", o: "Distal half of anterior surface of humerus", i: "Tuberosity and coronoid process of ulna", n: "Musculocutaneous, small branch from radial C<b>5, 6</b>", a: "Flex the elbow (humeroulnar joint)" },
+{ day: 3, name: "Coracobrachialis", o: "Coracoid process of the scapula", i: "Medial surface of mid-humeral shaft", n: "Musculocutaneous C<b>6, 7</b>", a: "Flex the shoulder (glenohumeral joint). Adduct the shoulder (G/H joint)" },
+{ day: 3, name: "Triceps Brachii", o: "Long head: Infraglenoid tubercle of the scapula. Lateral head: Posterior surface of proximal half of the humerus. Medial head: Posterior surface of distal half of the humerus", i: "Olecranon process of the ulna", n: "Radial C6, <b>7, 8</b>, T1", a: "All heads: Extend the elbow (humeroulnar joint). Long head: Extend the shoulder (glenohumeral joint), Adduct the shoulder (G/H joint)" },
+{ day: 3, name: "Anconeus", o: "Lateral epicondyle of the humerus", i: "Olecranon process and posterior, proximal surface of ulna", n: "Radial C<b>7, 8</b>", a: "Extend the elbow (humeroulnar joint)" },
+{ day: 3, name: "Teres Major", o: "Inferior angle and lower one-third of lateral border of the scapula", i: "Crest of the lesser tubercle of the humerus", n: "Lower subscapular C5, <b>6, 7</b>", a: "Extend the shoulder (glenohumeral joint). Adduct the shoulder (G/H joint). Medially rotate the shoulder (G/H joint)" },
+{ day: 3, name: "Teres Minor", o: "Upper two-thirds of lateral border of the scapula", i: "Greater tubercle of the humerus", n: "Axillary C<b>5, 6</b>", a: "Laterally rotate the shoulder (glenohumeral joint). Adduct the shoulder (G/H joint). Stabilize the head of humerus in glenoid cavity" },
+{ day: 3, name: "Infraspinatus", o: "Infraspinous fossa of the scapula", i: "Greater tubercle of the humerus", n: "Suprascapular C(4), <b>5, 6</b>", a: "Laterally rotate the shoulder (glenohumeral joint). Adduct the shoulder (G/H joint). Stabilize the head of humerus in glenoid cavity" },
+{ day: 3, name: "Supraspinatus", o: "Supraspinous fossa of the scapula", i: "Greater tubercle of the humerus", n: "Suprascapular C4, <b>5, 6</b>", a: "Abduct the shoulder (glenohumeral joint). Stabilize the head of humerus in glenoid cavity" },
+{ day: 3, name: "Subscapularis", o: "Subscapular fossa of the scapula", i: "Lesser tubercle of the humerus", n: "Upper and lower subscapular C5, <b>6</b>, 7", a: "Medially rotate the shoulder (glenohumeral joint). Stabilize the head of humerus in glenoid cavity" }
 ];
 
 const $ = s => document.querySelector(s), app = $('#app'), hero = $('#hero');
@@ -117,7 +132,8 @@ const theme = store.get('oina_theme', null);
 if (theme) root.dataset.theme = theme;
 const isDark = () => (root.dataset.theme || (mq.matches ? 'dark' : 'light')) === 'dark';
 const PROPS = { o: 'Origin', i: 'Insertion', n: 'Nerve', a: 'Action' };
-const S = { mode: 'menu', filter: store.get('oina_filter', 'all'), focus: 'any', deck: [], i: 0, flip: false, score: 0, total: 0, streak: 0, q: null, bag: [] };
+const S = { mode: 'menu', filter: store.get('oina_filter', 'all'), qlen: store.get('oina_qlen', 10), deck: [], i: 0, flip: false, score: 0, total: 0, streak: 0, q: null, bag: [], qn: 0, done: false, qflip: false, qpop: false, maxStreak: 0 };
+if (![0, 5, 10, 20].includes(S.qlen)) S.qlen = 10;
 
 function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 function active() {
@@ -137,24 +153,28 @@ function render() {
 /* ---------- Menu ---------- */
 function menuView() {
   const n = active().length, f = S.filter, dis = n ? '' : ' disabled';
-  const seg = (v, l) => `<button data-act="filter" data-v="${v}" class="${f === v ? 'on' : ''}" aria-pressed="${f === v}">${l}</button>`;
-  const chip = (v, l) => `<button data-act="focus" data-v="${v}" class="${S.focus === v ? 'on' : ''}" aria-pressed="${S.focus === v}">${l}</button>`;
+  const seg = (v, l, x = '') => `<button data-act="filter" data-v="${v}"${x} class="${f === v ? 'on' : ''}" aria-pressed="${f === v}">${l}</button>`;
+  const qc = (v, l, x = '') => `<button data-act="qlen" data-v="${v}"${x} class="${S.qlen === v ? 'on' : ''}" aria-pressed="${S.qlen === v}">${l}</button>`;
   app.innerHTML = `
     <section class="card">
       <p class="label">Study set</p>
-      <div class="seg">${seg('1', 'Day 1')}${seg('2', 'Day 2')}${seg('all', 'All')}${seg('saved', '⭐ Saved (' + saved.length + ')')}</div>
+      <div class="seg">${seg('1', 'Day 1')}${seg('2', 'Day 2')}${seg('3', 'Day 3')}${seg('all', 'All')}${seg('saved', '⭐ Saved (' + saved.length + ')', ' style="flex:1 1 100%"')}</div>
       <p class="count">${n} muscle${n === 1 ? '' : 's'} selected${f === 'saved' && !n ? ' — save cards from the flashcards first' : ''}</p>
     </section>
     <button class="big blue" data-act="cards"${dis}>📚 Flashcards</button>
     <section class="card">
-      <p class="label">Quiz focus</p>
-      <div class="chips">${chip('any', 'Mixed')}${chip('o', 'Origin')}${chip('i', 'Insertion')}${chip('n', 'Nerve')}${chip('a', 'Action')}</div>
+      <p class="label">Number of questions</p>
+      <div class="chips">${qc(5, '5')}${qc(10, '10')}${qc(20, '20')}${qc(0, 'Endless Mode', ' style="flex:2"')}</div>
     </section>
     <button class="big green" data-act="quiz"${dis}>📝 Practice Quiz</button>
     <div class="foot"><span>🔥 Best streak: <b>${best}</b></span><button class="tbtn" data-act="theme">${isDark() ? '☀️ Light mode' : '🌙 Dark mode'}</button></div>`;
 }
 
 /* ---------- Flashcards ---------- */
+function detail(m) {
+  const fact = (k, c, t) => `<p class="fact"><b style="color:var(--${c})">${k}:</b> ${t}</p>`;
+  return `<h3>${m.name}</h3>${fact('O', 'o', m.o)}${fact('I', 'i', m.i)}${fact('N', 'n', m.n)}${fact('A', 'a', m.a)}${m.notes ? `<div class="notes"><p class="nl">Side notes</p>${m.notes.map(n => `<p>${n}</p>`).join('')}</div>` : ''}`;
+}
 function cardsView() {
   const d = S.deck, inSaved = S.filter === 'saved';
   if (!d.length) {
@@ -163,14 +183,14 @@ function cardsView() {
       <button class="prime" style="width:100%;padding:1rem;font-weight:700" data-act="cards">Restart deck</button></div>`;
     return;
   }
-  const m = d[S.i], fact = (k, c, t) => `<p class="fact"><b style="color:var(--${c})">${k}:</b> ${t}</p>`;
+  const m = d[S.i];
   app.innerHTML = `
     <div class="bar"><button class="back" data-act="menu">← Menu</button>
       <span class="pill">${inSaved ? '⭐ ' : ''}${S.i + 1} / ${d.length}</span></div>
     <div class="prog" role="progressbar" aria-valuemin="1" aria-valuemax="${d.length}" aria-valuenow="${S.i + 1}"><i style="width:${(S.i + 1) / d.length * 100}%"></i></div>
     <div class="fc" data-act="flip" role="button" tabindex="0" aria-label="Flip card">
       ${S.flip
-        ? `<div class="back-face"><h3>${m.name}</h3>${fact('O', 'o', m.o)}${fact('I', 'i', m.i)}${fact('N', 'n', m.n)}${fact('A', 'a', m.a)}${m.notes ? `<div class="notes"><p class="nl">Side notes</p>${m.notes.map(n => `<p>${n}</p>`).join('')}</div>` : ''}</div>`
+        ? `<div class="back-face">${detail(m)}</div>`
         : `<h2>${m.name}</h2>`}
       <span class="hint">Tap to flip · swipe for next</span>
     </div>
@@ -192,10 +212,11 @@ function newQ() {
     if (S.q && l > 0 && S.bag[l].name === S.q.muscle) [S.bag[0], S.bag[l]] = [S.bag[l], S.bag[0]];
   }
   const t = S.bag.pop();
-  const p = S.focus === 'any' ? Object.keys(PROPS)[Math.floor(Math.random() * 4)] : S.focus;
+  const p = Object.keys(PROPS)[Math.floor(Math.random() * 4)];
   const pool = [...new Set(muscles.map(m => m[p]))].filter(x => x !== t[p]);
   const opts = shuffle([t[p], ...shuffle(pool).slice(0, 3)]);
-  S.q = { muscle: t.name, day: t.day, prop: PROPS[p], answer: t[p], opts, wrong: [], solved: false, counted: false };
+  S.q = { m: t, muscle: t.name, day: t.day, prop: PROPS[p], answer: t[p], opts, wrong: [], solved: false, counted: false };
+  S.qn++; S.qflip = false;
 }
 function answer(i) {
   const q = S.q;
@@ -203,32 +224,46 @@ function answer(i) {
   const ok = q.opts[i] === q.answer;
   if (!q.counted) {
     q.counted = true; S.total++;
-    if (ok) { S.score++; S.streak++; if (S.streak > best) { best = S.streak; store.set('oina_best', best); } }
+    if (ok) { S.score++; S.streak++; if (S.streak > S.maxStreak) S.maxStreak = S.streak; if (S.streak > best) { best = S.streak; store.set('oina_best', best); } }
     else S.streak = 0;
   }
   if (ok) q.solved = true; else q.wrong.push(i);
   render();
 }
+function resultsView() {
+  const n = S.qlen, pct = Math.round(S.score / n * 100), skipped = n - S.total;
+  app.innerHTML = `
+    <div class="bar"><button class="back" data-act="menu">← Menu</button></div>
+    <div class="card empty"><h2>Quiz complete 🎉</h2><div class="score">${S.score}/${n}</div>
+      <p>${pct}% correct on the first try${S.maxStreak > 1 ? ' · 🔥 best streak ' + S.maxStreak : ''}${skipped > 0 ? ' · ' + skipped + ' skipped' : ''}</p></div>
+    <button class="big blue" data-act="quiz">Try again</button>`;
+}
 function quizView() {
-  const q = S.q, pct = S.total ? Math.round(S.score / S.total * 100) : 0;
+  if (S.done) return resultsView();
+  const q = S.q, pct = S.total ? Math.round(S.score / S.total * 100) : 0, fin = S.qlen > 0, last = fin && S.qn >= S.qlen;
   const state = i => q.solved && q.opts[i] === q.answer ? ' ok' : q.wrong.includes(i) ? ' no' : '';
   const mark = i => state(i) === ' ok' ? '✅ ' : state(i) === ' no' ? '❌ ' : '';
   app.innerHTML = `
     <div class="bar"><button class="back" data-act="menu">← Menu</button>
       <span class="pill">First try: ${S.score}/${S.total}${S.total ? ' · ' + pct + '%' : ''}${S.streak > 1 ? ' · 🔥' + S.streak : ''}</span></div>
-    <section class="card q">
-      <p>What is the <b>${q.prop}</b> of the:</p>
-      <h2>${q.muscle}?</h2><span class="tag">Day ${q.day}</span>
+    ${fin ? `<div class="prog" role="progressbar" aria-valuemin="1" aria-valuemax="${S.qlen}" aria-valuenow="${S.qn}"><i style="width:${S.qn / S.qlen * 100}%"></i></div>` : ''}
+    <p class="count" style="margin:0">${fin ? `Question ${S.qn} of ${S.qlen}` : `Question ${S.qn} · Endless Mode`}</p>
+    <section class="card q${S.qpop ? ' pop' : ''}" data-act="qflip" role="button" tabindex="0" aria-label="${S.qflip ? 'Back to question' : 'Show flash card'}">
+      ${S.qflip
+        ? `<div class="back-face">${detail(q.m)}</div><span class="qnote ret">Click to return to question</span>`
+        : `<div class="qq"><p>What is the <b>${q.prop}</b> of the:</p><h2>${q.muscle}?</h2><span class="qnote">Click for Flash Card</span><span class="tag">Day ${q.day}</span></div>`}
     </section>
     <div class="opts">${q.opts.map((o, i) => `<button class="opt${state(i)}" data-act="answer" data-v="${i}"${q.solved ? ' disabled style="opacity:1"' : ''}><kbd>${i + 1}</kbd><span>${mark(i)}${o}</span></button>`).join('')}</div>
     <p class="msg ${q.solved ? 'ok' : 'no'}" aria-live="polite">${q.solved ? 'SD silently nods in approval' : q.wrong.length ? 'SD scoffs in disgust' : ''}</p>
-    <button class="big ${q.solved ? 'blue' : 'gray'}" style="font-size:1rem;${q.solved ? '' : 'color:inherit;box-shadow:none'}" data-act="nextq">Next →</button>`;
+    <button class="big ${q.solved ? 'blue' : 'gray'}" style="font-size:1rem;${q.solved ? '' : 'color:inherit;box-shadow:none'}" data-act="nextq">${last ? 'Finish ✓' : 'Next →'}</button>`;
+  S.qpop = false;
 }
 
 /* ---------- Actions ---------- */
 const act = {
   filter: v => { S.filter = v; store.set('oina_filter', v); render(); },
-  focus: v => { S.focus = v; render(); },
+  qlen: v => { S.qlen = +v; store.set('oina_qlen', S.qlen); render(); },
+  qflip: () => { S.qflip = !S.qflip; S.qpop = true; render(); },
   menu: () => { S.mode = 'menu'; render(); scrollTo(0, 0); },
   cards: () => { S.mode = 'cards'; S.deck = active().slice(); S.i = 0; S.flip = false; render(); },
   flip: () => { S.flip = !S.flip; render(); },
@@ -243,9 +278,9 @@ const act = {
     S.deck.splice(S.i, 1);
     S.i = Math.min(S.i, Math.max(0, S.deck.length - 1)); S.flip = false; render();
   },
-  quiz: () => { S.mode = 'quiz'; S.score = S.total = S.streak = 0; S.bag = []; S.q = null; newQ(); render(); },
+  quiz: () => { S.mode = 'quiz'; S.score = S.total = S.streak = 0; S.bag = []; S.q = null; S.qn = 0; S.done = false; S.maxStreak = 0; newQ(); render(); },
   answer: v => answer(+v),
-  nextq: () => { newQ(); render(); scrollTo(0, 0); },
+  nextq: () => { if (S.qlen && S.qn >= S.qlen) S.done = true; else newQ(); render(); scrollTo(0, 0); },
   theme: () => { const t = isDark() ? 'light' : 'dark'; root.dataset.theme = t; store.set('oina_theme', t); render(); }
 };
 
@@ -263,7 +298,7 @@ app.addEventListener('touchend', e => {
   if (Math.abs(dx) > 60) dx < 0 ? act.next() : act.prev();
 });
 
-/* Keyboard: ←/→ flip through, Space flips, S saves, 1–4 answer, Enter next, Esc menu */
+/* Keyboard: ←/→ flip through, Space flips, S saves, 1–4 answer, F flash card, Enter next, Esc menu */
 addEventListener('keydown', e => {
   if (e.metaKey || e.ctrlKey || e.altKey) return;
   const k = e.key;
@@ -275,7 +310,10 @@ addEventListener('keydown', e => {
     else if (k === ' ' || k === 'Enter') { e.preventDefault(); act.flip(); }
     else if (k === 's' || k === 'S') act.save();
   } else if (S.mode === 'quiz') {
-    if (k >= '1' && k <= '4') answer(+k - 1);
+    if (S.done) return;
+    if ((k === ' ' || k === 'Enter') && e.target.classList && e.target.classList.contains('q')) { e.preventDefault(); act.qflip(); }
+    else if (k === 'f' || k === 'F') act.qflip();
+    else if (k >= '1' && k <= '4') answer(+k - 1);
     else if (k === 'Enter' || k === 'ArrowRight') act.nextq();
   }
 });
