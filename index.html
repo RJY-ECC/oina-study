@@ -132,14 +132,21 @@ const theme = store.get('oina_theme', null);
 if (theme) root.dataset.theme = theme;
 const isDark = () => (root.dataset.theme || (mq.matches ? 'dark' : 'light')) === 'dark';
 const PROPS = { o: 'Origin', i: 'Insertion', n: 'Nerve', a: 'Action' };
-const S = { mode: 'menu', filter: store.get('oina_filter', 'all'), qlen: store.get('oina_qlen', 10), deck: [], i: 0, flip: false, score: 0, total: 0, streak: 0, q: null, bag: [], qn: 0, done: false, qflip: false, qpop: false, maxStreak: 0 };
+const DAYS = [1, 2, 3];
+function normFilter(v) {
+  if (v === 'saved') return 'saved';
+  if (v === 'all') return DAYS.slice();
+  if (Array.isArray(v)) return DAYS.filter(d => v.includes(d));
+  if (DAYS.includes(+v)) return [+v];
+  return DAYS.slice();
+}
+const S = { mode: 'menu', filter: normFilter(store.get('oina_filter', 'all')), qlen: store.get('oina_qlen', 10), deck: [], i: 0, flip: false, score: 0, total: 0, streak: 0, q: null, bag: [], qn: 0, done: false, qflip: false, qpop: false, maxStreak: 0 };
 if (![0, 5, 10, 20].includes(S.qlen)) S.qlen = 10;
 
 function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 function active() {
   if (S.filter === 'saved') return muscles.filter(m => saved.includes(m.name));
-  if (S.filter === 'all') return muscles;
-  return muscles.filter(m => m.day === +S.filter);
+  return muscles.filter(m => S.filter.includes(m.day));
 }
 function toast(msg) {
   const t = $('#toast'); t.textContent = msg; t.classList.add('show');
@@ -153,13 +160,14 @@ function render() {
 /* ---------- Menu ---------- */
 function menuView() {
   const n = active().length, f = S.filter, dis = n ? '' : ' disabled';
-  const seg = (v, l, x = '') => `<button data-act="filter" data-v="${v}"${x} class="${f === v ? 'on' : ''}" aria-pressed="${f === v}">${l}</button>`;
+  const isOn = v => v === 'saved' ? f === 'saved' : v === 'all' ? f !== 'saved' && f.length === DAYS.length : f !== 'saved' && f.includes(+v);
+  const seg = (v, l, x = '') => `<button data-act="filter" data-v="${v}"${x} class="${isOn(v) ? 'on' : ''}" aria-pressed="${isOn(v)}">${l}</button>`;
   const qc = (v, l, x = '') => `<button data-act="qlen" data-v="${v}"${x} class="${S.qlen === v ? 'on' : ''}" aria-pressed="${S.qlen === v}">${l}</button>`;
   app.innerHTML = `
     <section class="card">
-      <p class="label">Study set</p>
+      <p class="label">Study set · tap to select multiple days</p>
       <div class="seg">${seg('1', 'Day 1')}${seg('2', 'Day 2')}${seg('3', 'Day 3')}${seg('all', 'All')}${seg('saved', '⭐ Saved (' + saved.length + ')', ' style="flex:1 1 100%"')}</div>
-      <p class="count">${n} muscle${n === 1 ? '' : 's'} selected${f === 'saved' && !n ? ' — save cards from the flashcards first' : ''}</p>
+      <p class="count">${n} muscle${n === 1 ? '' : 's'} selected${!n ? (f === 'saved' ? ' — save cards from the flashcards first' : ' — select at least one day') : ''}</p>
     </section>
     <button class="big blue" data-act="cards"${dis}>📚 Flashcards</button>
     <section class="card">
@@ -261,7 +269,17 @@ function quizView() {
 
 /* ---------- Actions ---------- */
 const act = {
-  filter: v => { S.filter = v; store.set('oina_filter', v); render(); },
+  filter: v => {
+    const cur = S.filter;
+    if (v === 'saved') S.filter = 'saved';
+    else if (v === 'all') S.filter = DAYS.slice();
+    else {
+      const d = +v;
+      if (cur === 'saved') S.filter = [d];
+      else S.filter = cur.includes(d) ? cur.filter(x => x !== d) : DAYS.filter(x => x === d || cur.includes(x));
+    }
+    store.set('oina_filter', S.filter); render();
+  },
   qlen: v => { S.qlen = +v; store.set('oina_qlen', S.qlen); render(); },
   qflip: () => { S.qflip = !S.qflip; S.qpop = true; render(); },
   menu: () => { S.mode = 'menu'; render(); scrollTo(0, 0); },
