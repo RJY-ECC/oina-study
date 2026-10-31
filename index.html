@@ -20,7 +20,7 @@ button:disabled{opacity:.4;cursor:default}
 :focus-visible{outline:3px solid var(--brand);outline-offset:2px}
 .hero{text-align:center;margin:1rem 0 .5rem}
 .hero[hidden]{display:none}
-.logo{width:min(16rem,70%);height:auto;background:#fff;border-radius:1.25rem;padding:.5rem;box-shadow:0 1px 3px #0002;-webkit-user-drag:none;pointer-events:none}
+.logo{width:min(16rem,70%);height:auto;-webkit-user-drag:none;pointer-events:none}
 h1{margin:.8rem 0 0;font-size:1.9rem;font-weight:800;color:var(--head);letter-spacing:-.02em}
 .sub{margin:.1rem 0 0;color:var(--mute);font-size:.85rem;letter-spacing:.08em;text-transform:uppercase}
 .card{background:var(--card);border:1px solid var(--line);border-radius:1.25rem;padding:1rem;box-shadow:0 1px 2px #0001}
@@ -114,7 +114,7 @@ const muscles = [
 { day: 2, name: "Rhomboid Major", img: "images/rhomboid-major.jpg", o: "Spinous processes of T-2 to T-5", i: "Medial border of the scapula between the spine of the scapula and inferior angle", n: "Dorsal scapular C4, <b>5</b>", a: "Adduct, elevate, and downwardly rotate the scapula (S/T joint)" },
 { day: 2, name: "Rhomboid Minor", img: "images/rhomboid-minor.jpg", o: "Spinous processes of C-7 and T-1", i: "Upper portion of medial border of the scapula, at the level of the spine of the scapula", n: "Dorsal scapular C4, <b>5</b>", a: "Adduct, elevate, and downwardly rotate the scapula (S/T joint)" },
 { day: 2, name: "Deltoid", img: "images/deltoid.jpg", o: "Lateral one-third of clavicle, acromion and spine of scapula", i: "Deltoid tuberosity", n: "Axillary C<b>5, 6</b>", a: "All: Abduct shoulder. Anterior: Flex, medially rotate, horiz adduct. Posterior: Extend, laterally rotate, horiz abduct." },
-{ day: 3, name: "Biceps Brachii", img: "images/biceps-brachii.jpg", o: "Short head: Coracoid process of scapula. Long head: Supraglenoid tubercle of scapula", i: "Tuberosity of the radius and aponeurosis of the biceps brachii", n: "Musculocutaneous C<b>5, 6</b>", a: "Flex the elbow (humeroulnar joint). Supinate the forearm (radioulnar joints). Flex the shoulder (glenohumeral joint)", notes: ["<i>*Bicipital aponeurosis</i>"] },
+{ day: 3, name: "Biceps Brachii", img: "images/biceps-brachii.jpg", o: "Short head: Coracoid process of scapula. Long head: Supraglenoid tubercle of scapula", i: "Tuberosity of the radius and aponeurosis of the biceps brachii", n: "Musculocutaneous C<b>5, 6</b>", a: "Flex the elbow (humeroulnar joint). Supinate the forearm (radioulnar joints). Flex the shoulder (glenohumeral joint)" },
 { day: 3, name: "Brachialis", img: "images/brachialis.jpg", o: "Distal half of anterior surface of humerus", i: "Tuberosity and coronoid process of ulna", n: "Musculocutaneous, small branch from radial C<b>5, 6</b>", a: "Flex the elbow (humeroulnar joint)" },
 { day: 3, name: "Coracobrachialis", img: "images/coracobrachialis.jpg", o: "Coracoid process of the scapula", i: "Medial surface of mid-humeral shaft", n: "Musculocutaneous C<b>6, 7</b>", a: "Flex the shoulder (glenohumeral joint). Adduct the shoulder (G/H joint)" },
 { day: 3, name: "Triceps Brachii", img: "images/triceps-brachii.jpg", o: "Long head: Infraglenoid tubercle of the scapula. Lateral head: Posterior surface of proximal half of the humerus. Medial head: Posterior surface of distal half of the humerus", i: "Olecranon process of the ulna", n: "Radial C6, <b>7, 8</b>, T1", a: "All heads: Extend the elbow (humeroulnar joint). Long head: Extend the shoulder (glenohumeral joint), Adduct the shoulder (G/H joint)" },
