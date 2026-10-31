@@ -45,7 +45,11 @@ h1{margin:.8rem 0 0;font-size:1.9rem;font-weight:800;color:var(--head);letter-sp
 @keyframes pop{from{opacity:.4;transform:scale(.97)}to{opacity:1;transform:none}}
 .fc h2{margin:0;font-size:1.9rem;font-weight:800;text-align:center}
 .fc h3,.q h3{margin:0 0 .6rem;padding-bottom:.5rem;border-bottom:1px solid var(--line);text-align:center;font-size:1.2rem;color:var(--head)}
-.back-face{width:100%;max-height:26rem;overflow-y:auto;text-align:left}
+.mimg{display:block;max-width:100%;max-height:10rem;width:auto;height:auto;margin:0 auto .7rem;border-radius:.75rem;background:#fff}
+.imgface{width:100%;text-align:center;padding-bottom:1.2rem}
+.imgface h2{margin:0 0 .8rem;font-size:1.6rem}
+.bigimg{display:block;width:100%;max-height:19rem;object-fit:contain;border-radius:.75rem;background:#fff}
+.back-face{width:100%;max-height:32rem;overflow-y:auto;text-align:left}
 .fact{margin:.55rem 0;font-size:.95rem}
 .fact b{font-weight:800}
 .hint{position:absolute;bottom:.7rem;font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);opacity:.8}
@@ -102,7 +106,7 @@ const muscles = [
 { day: 2, name: "Latissimus Dorsi", o: "Inferior angle of scapula, spinous processes of last six thoracic vertebrae, last 3-4 ribs, thoracolumbar aponeurosis and posterior iliac crest", i: "Intertubercular groove of the humerus", n: "Thoracodorsal C<b>6, 7, 8</b>", a: "Extend, adduct, and medially rotate the shoulder (G/H joint)", notes: ["Origin = Inferior angle of scapula, Spinous process of T7-T12, Last 3-4 Ribs, Thoracolumbar Aponeurosis and Posterior iliac crest", "<i>*The thoracolumbar aponeurosis is a large sheet of connective tissue that covers/attaches to spinous process of L1-L5, Sacrum and Posterior iliac crest*</i>"] },
 { day: 2, name: "Subclavius", o: "First rib and cartilage", i: "Inferior surface of middle one-third of clavicle", n: "Subclavian C<b>5, 6</b>", a: "Depress the clavicle, Elevate first rib, Stabilize sternoclavicular joint" },
 { day: 2, name: "Serratus Anterior", o: "External surfaces of upper eight or nine ribs", i: "Anterior surface of medial border of the scapula", n: "Long thoracic C<b>5, 6, 7</b>, 8", a: "Abduct, upwardly rotate, and depress the scapula. Hold medial border against rib cage. May elevate thorax." },
-{ day: 2, name: "Pectoralis Minor", o: "Third, fourth and fifth ribs", i: "Medial surface of coracoid process of the scapula", n: "Medial pectoral, with fibers from communicating branch of lateral pectoral C(6), <b>7, 8</b>, T1", a: "Depress, abduct, and downwardly rotate the scapula. Assist to elevate thorax.", notes: ["Nerve = Medial Pectoral Nerve, MPN (C8-T1), and LPN, Lateral Pectoral Nerve (C5-C7)"] },
+{ day: 2, name: "Pectoralis Minor", img: "images/pectoralis-minor.jpg", o: "Third, fourth and fifth ribs", i: "Medial surface of coracoid process of the scapula", n: "Medial pectoral, with fibers from communicating branch of lateral pectoral C(6), <b>7, 8</b>, T1", a: "Depress, abduct, and downwardly rotate the scapula. Assist to elevate thorax.", notes: ["Nerve = Medial Pectoral Nerve, MPN (C8-T1), and LPN, Lateral Pectoral Nerve (C5-C7)"] },
 { day: 2, name: "Pectoralis Major", o: "Medial half of clavicle, sternum and cartilage of first through sixth ribs", i: "Crest of greater tubercle of humerus", n: "Upper fibers: Lateral pectoral C<b>5, 6, 7</b>. Lower fibers: Lateral/medial pectoral C<b>6, 7, 8</b>, <b>T1</b>", a: "Adduct & medially rotate shoulder. Upper fibers flex & horiz. adduct. Lower fibers extend.", notes: ["Nerve = Lateral Pectoral Nerve, LPN (C5-C7) and Medial Pectoral Nerve, MPN (C8-T1)"] },
 { day: 2, name: "Levator Scapula", o: "Transverse processes of first through fourth cervical vertebrae", i: "Medial border of scapula, between superior angle and superior portion of spine of scapula", n: "Cervical <b>3, 4</b>, and Dorsal scapular C4, <b>5</b>", a: "Unilaterally: Elevate & downwardly rotate scapula, laterally flex/rotate head & neck. Bilaterally: Extend head/neck.", notes: ["Origin = Transverse Process of C1-C4", "Nerve = (Cervical 3,4 = Part of Cervical Plexus) and DSN (C4-C5)"] },
 { day: 2, name: "Trapezius", o: "External occipital protuberance, medial superior nuchal line, ligamentum nuchae and spinous processes C-7 to T-12", i: "Lateral one-third of clavicle, acromion and spine of the scapula", n: "Spinal portion of cranial nerve XI (accessory) and ventral ramus C2, <b>3, 4</b>", a: "Upper: Extend, lat flex, rotate head; Elevate/upwardly rotate scapula. Middle: Adduct/stabilize scapula. Lower: Depress/upwardly rotate scapula.", notes: ["Nerve = Cranial Nerve 11 (Accessory) for Motor and Ventral Ramus C2-C4 for Sensory"] },
@@ -187,9 +191,12 @@ function menuView() {
 }
 
 /* ---------- Flashcards ---------- */
-function detail(m) {
+function pic(m, cls) {
+  return m.img ? `<img class="${cls}" src="${m.img}" alt="${m.name} diagram" loading="lazy" onerror="this.remove()">` : '';
+}
+function detail(m, withPic) {
   const fact = (k, c, t) => `<p class="fact"><b style="color:var(--${c})">${k}:</b> ${t}</p>`;
-  return `<h3>${m.name}</h3>${fact('O', 'o', m.o)}${fact('I', 'i', m.i)}${fact('N', 'n', m.n)}${fact('A', 'a', m.a)}${m.notes ? `<div class="notes"><p class="nl">Side notes</p>${m.notes.map(n => `<p>${n}</p>`).join('')}</div>` : ''}`;
+  return `<h3>${m.name}</h3>${withPic ? pic(m, 'mimg') : ''}${fact('O', 'o', m.o)}${fact('I', 'i', m.i)}${fact('N', 'n', m.n)}${fact('A', 'a', m.a)}${m.notes ? `<div class="notes"><p class="nl">Side notes</p>${m.notes.map(n => `<p>${n}</p>`).join('')}</div>` : ''}`;
 }
 function cardsView() {
   const d = S.deck, inRemoved = S.filter === 'removed';
@@ -207,7 +214,9 @@ function cardsView() {
     <div class="fc" data-act="flip" role="button" tabindex="0" aria-label="Flip card">
       ${S.flip
         ? `<div class="back-face">${detail(m)}</div>`
-        : `<h2>${m.name}</h2>`}
+        : m.img
+          ? `<div class="imgface"><h2>${m.name}</h2>${pic(m, 'bigimg')}</div>`
+          : `<h2>${m.name}</h2>`}
       <span class="hint">Tap to flip · swipe for next</span>
     </div>
     <div class="row">
@@ -268,7 +277,7 @@ function quizView() {
     <p class="count" style="margin:0">${fin ? `Question ${S.qn} of ${S.qlen}` : `Question ${S.qn} · Endless Mode`}</p>
     <section class="card q${S.qpop ? ' pop' : ''}" data-act="qflip" role="button" tabindex="0" aria-label="${S.qflip ? 'Back to question' : 'Show flash card'}">
       ${S.qflip
-        ? `<div class="back-face">${detail(q.m)}</div><span class="qnote ret">Click to return to question</span>`
+        ? `<div class="back-face">${detail(q.m, true)}</div><span class="qnote ret">Click to return to question</span>`
         : `<div class="qq"><p>What is the <b>${q.prop}</b> of the:</p><h2>${q.muscle}?</h2><span class="qnote">Click for Flash Card</span><span class="tag">Day ${q.day}</span></div>`}
     </section>
     <div class="opts">${q.opts.map((o, i) => `<button class="opt${state(i)}" data-act="answer" data-v="${i}"${q.solved ? ' disabled style="opacity:1"' : ''}><kbd>${i + 1}</kbd><span>${mark(i)}${o}</span></button>`).join('')}</div>
@@ -295,7 +304,10 @@ const act = {
   qflip: () => { S.qflip = !S.qflip; S.qpop = true; render(); },
   menu: () => { S.mode = 'menu'; render(); scrollTo(0, 0); },
   cards: () => { S.mode = 'cards'; S.deck = active().slice(); S.i = 0; S.flip = false; render(); },
-  flip: () => { S.flip = !S.flip; render(); },
+  flip: () => {
+    S.flip = !S.flip;
+    render();
+  },
   prev: () => { if (S.i > 0) { S.i--; S.flip = false; render(); } },
   next: () => { if (S.i < S.deck.length - 1) { S.i++; S.flip = false; render(); } },
   shuffle: () => { shuffle(S.deck); S.i = 0; S.flip = false; render(); toast('Deck scrambled'); },
