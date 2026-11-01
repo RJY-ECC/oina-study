@@ -34,6 +34,8 @@ h1{margin:.8rem 0 0;font-size:1.9rem;font-weight:800;color:var(--head);letter-sp
 .blue{background:#2563eb}.green{background:#059669}
 .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:center;font-size:.8rem;color:var(--mute);padding:.5rem .25rem}
 .tbtn{background:var(--soft);color:var(--ink);font-weight:700;font-size:.8rem;padding:.5rem .9rem;border-radius:99px}
+.ptog{align-self:center;margin-top:-.3rem;background:var(--soft);color:var(--mute);font-weight:600;font-size:.72rem;padding:.3rem .75rem;border-radius:99px}
+.ptog.on{color:var(--brand)}
 .notes{margin-top:.9rem;padding:.7rem .8rem;background:var(--amber);color:var(--amberi);border-radius:.8rem;font-size:.82rem}
 .notes p{margin:.3rem 0}.notes .nl{font-weight:800;text-transform:uppercase;letter-spacing:.08em;font-size:.68rem;margin:0}
 .bar{display:flex;justify-content:space-between;align-items:center;gap:.5rem;margin-top:.5rem}
@@ -131,7 +133,7 @@ const store = {
   get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
 };
-let removed = store.get('oina_removed', []), qrem = store.get('oina_qrem', false), best = store.get('oina_best', 0);
+let removed = store.get('oina_removed', []), qrem = store.get('oina_qrem', false), pics = store.get('oina_pics', true), best = store.get('oina_best', 0);
 const root = document.documentElement, mq = matchMedia('(prefers-color-scheme: dark)');
 const theme = store.get('oina_theme', null);
 if (theme) root.dataset.theme = theme;
@@ -181,6 +183,7 @@ function menuView() {
       <p class="count">${n} muscle${n === 1 ? '' : 's'} selected${!n ? (f === 'removed' ? ' — no cards have been removed yet' : ' — select at least one day') : ''}</p>
     </section>
     <button class="big blue" data-act="cards"${dis}>📚 Flashcards</button>
+    <button class="ptog${pics ? ' on' : ''}" data-act="pics" aria-pressed="${pics}">🖼️ Pictures: ${pics ? 'On' : 'Off'}</button>
     <section class="card">
       <p class="label">Number of questions</p>
       <div class="chips">${qc(5, '5')}${qc(10, '10')}${qc(20, '20')}${qc(0, 'Endless Mode', ' style="flex:2"')}</div>
@@ -193,7 +196,7 @@ function menuView() {
 
 /* ---------- Flashcards ---------- */
 function pic(m, cls) {
-  return m.img ? `<img class="${cls}" src="${m.img}" alt="${m.name} diagram" loading="lazy" onerror="this.outerHTML='<p class=\\'noimg\\'>Image not found: ' + this.getAttribute('src') + '</p>'">` : '';
+  return pics && m.img ? `<img class="${cls}" src="${m.img}" alt="${m.name} diagram" loading="lazy" onerror="this.outerHTML='<p class=\\'noimg\\'>Image not found: ' + this.getAttribute('src') + '</p>'">` : '';
 }
 function detail(m, withPic) {
   const fact = (k, c, t) => `<p class="fact"><b style="color:var(--${c})">${k}:</b> ${t}</p>`;
@@ -215,7 +218,7 @@ function cardsView() {
     <div class="fc" data-act="flip" role="button" tabindex="0" aria-label="Flip card">
       ${S.flip
         ? `<div class="back-face">${detail(m)}</div>`
-        : m.img
+        : pics && m.img
           ? `<div class="imgface"><h2>${m.name}</h2>${pic(m, 'bigimg')}</div>`
           : `<h2>${m.name}</h2>`}
       <span class="hint">Tap to flip · swipe for next</span>
@@ -300,6 +303,7 @@ const act = {
     }
     store.set('oina_filter', S.filter); render();
   },
+  pics: () => { pics = !pics; store.set('oina_pics', pics); render(); },
   qrem: () => { qrem = !qrem; store.set('oina_qrem', qrem); render(); },
   qlen: v => { S.qlen = +v; store.set('oina_qlen', S.qlen); render(); },
   qflip: () => { S.qflip = !S.qflip; S.qpop = true; render(); },
