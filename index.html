@@ -34,7 +34,10 @@ h1{margin:.8rem 0 0;font-size:1.9rem;font-weight:800;color:var(--head);letter-sp
 .blue{background:#2563eb}.green{background:#059669}
 .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:center;font-size:.8rem;color:var(--mute);padding:.5rem .25rem}
 .tbtn{background:var(--soft);color:var(--ink);font-weight:700;font-size:.8rem;padding:.5rem .9rem;border-radius:99px}
-.ptog{align-self:center;margin-top:-.3rem;background:var(--soft);color:var(--mute);font-weight:600;font-size:.72rem;padding:.3rem .75rem;border-radius:99px}
+.togs{display:flex;justify-content:center;gap:.5rem;margin-top:-.3rem}
+.opt.cov{border-style:dashed;color:var(--mute);background:var(--soft)}
+.opt.cov span{font-style:italic}
+.ptog{background:var(--soft);color:var(--mute);font-weight:600;font-size:.72rem;padding:.3rem .75rem;border-radius:99px}
 .ptog.on{color:var(--brand)}
 .notes{margin-top:.9rem;padding:.7rem .8rem;background:var(--amber);color:var(--amberi);border-radius:.8rem;font-size:.82rem}
 .notes p{margin:.3rem 0}.notes .nl{font-weight:800;text-transform:uppercase;letter-spacing:.08em;font-size:.68rem;margin:0}
@@ -67,6 +70,13 @@ h1{margin:.8rem 0 0;font-size:1.9rem;font-weight:800;color:var(--head);letter-sp
 .q .back-face{max-height:20rem}
 .q .qnote.ret{text-align:center;margin-top:.7rem}
 .tag{display:inline-block;margin-top:.5rem;font-size:.7rem;font-weight:700;color:var(--mute);background:var(--soft);border-radius:99px;padding:.1rem .6rem}
+.azlist{max-height:68vh;overflow-y:auto;background:var(--card);border:1px solid var(--line);border-radius:1rem;padding:0 .4rem .4rem;-webkit-overflow-scrolling:touch}
+.azl{position:sticky;top:0;background:var(--card);color:var(--brand);font-weight:800;font-size:.8rem;padding:.55rem .4rem .25rem;border-bottom:1px solid var(--line);z-index:1}
+.azi{display:flex;justify-content:space-between;align-items:center;gap:.5rem;width:100%;text-align:left;background:none;padding:.7rem .5rem;font-size:.92rem;font-weight:600;color:inherit;border-radius:.6rem}
+.azi small{flex:none;color:var(--mute);font-weight:600;font-size:.7rem}
+@media(hover:hover){.azi:hover{background:var(--soft)}}
+.lq{max-width:100%;max-height:46vh;object-fit:contain;display:block;margin:0 auto}
+.card.q.lab{cursor:default}
 .opts{display:flex;flex-direction:column;gap:.6rem}
 .opt{display:flex;gap:.7rem;text-align:left;padding:.9rem;background:var(--card);border:2px solid var(--line);font-size:.9rem;font-weight:500;line-height:1.4}
 .opt kbd{flex:none;width:1.5rem;height:1.5rem;border-radius:.4rem;background:var(--soft);font:700 .75rem/1.5rem inherit;text-align:center;color:var(--mute)}
@@ -141,7 +151,7 @@ const store = {
   get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
 };
-let removed = store.get('oina_removed', []), qrem = store.get('oina_qrem', false), pics = store.get('oina_pics', true), best = store.get('oina_best', 0);
+let removed = store.get('oina_removed', []), qrem = store.get('oina_qrem', false), pics = store.get('oina_pics', true), hard = store.get('oina_hard', false), best = store.get('oina_best', 0);
 const root = document.documentElement, mq = matchMedia('(prefers-color-scheme: dark)');
 const theme = store.get('oina_theme', null);
 if (theme) root.dataset.theme = theme;
@@ -174,7 +184,7 @@ function toast(msg) {
 }
 function render() {
   hero.hidden = S.mode !== 'menu';
-  ({ menu: menuView, cards: cardsView, quiz: quizView })[S.mode]();
+  ({ menu: menuView, cards: cardsView, quiz: quizView, list: listView })[S.mode]();
 }
 
 /* ---------- Menu ---------- */
@@ -187,19 +197,38 @@ function menuView() {
   app.innerHTML = `
     <section class="card">
       <p class="label">Study set · tap to select multiple days</p>
-      <div class="seg">${seg('1', 'Day 1')}${seg('2', 'Day 2')}${seg('3', 'Day 3')}${seg('4', 'Day 4')}${seg('all', 'All')}${seg('removed', '🚫 Removed pile (' + removed.length + ')', ' style="flex:1 1 100%"')}</div>
+      <div class="seg">${seg('1', 'Day 1')}${seg('2', 'Day 2')}${seg('3', 'Day 3')}${seg('4', 'Day 4')}${seg('all', 'All')}</div>
+      <div class="seg" style="margin-top:.7rem">${seg('removed', '🚫 Removed (' + removed.length + ')', ' style="padding:.8rem .3rem;font-size:.85rem"')}<button data-act="azlist" style="padding:.8rem .3rem;font-size:.85rem">🔍 A–Z list</button></div>
       <p class="count">${n} muscle${n === 1 ? '' : 's'} selected${!n ? (f === 'removed' ? ' — no cards have been removed yet' : ' — select at least one day') : ''}</p>
     </section>
     <button class="big blue" data-act="cards"${dis}>📚 Flashcards</button>
-    <button class="ptog${pics ? ' on' : ''}" data-act="pics" aria-pressed="${pics}">🖼️ Pictures: ${pics ? 'On' : 'Off'}</button>
+    <div class="togs">
+      <button class="ptog${pics ? ' on' : ''}" data-act="pics" aria-pressed="${pics}">🖼️ Pictures: ${pics ? 'On' : 'Off'}</button>
+      <button class="ptog${hard ? ' on' : ''}" data-act="hard" aria-pressed="${hard}">🔒 Quiz Hard Mode: ${hard ? 'On' : 'Off'}</button>
+    </div>
     <section class="card">
       <p class="label">Number of questions</p>
       <div class="chips">${qc(5, '5')}${qc(10, '10')}${qc(20, '20')}${qc(0, 'Endless Mode', ' style="flex:2"')}</div>
       ${f === 'removed' ? '' : `<div class="chips" style="margin-top:.6rem"><button data-act="qrem" class="${qrem ? 'on' : ''}" aria-pressed="${qrem}">${qrem ? '☑' : '☐'} Include removed cards in quiz</button></div>`}
       <p class="count">${qn} card${qn === 1 ? '' : 's'} in quiz pool</p>
     </section>
-    <button class="big green" data-act="quiz"${qdis}>📝 Practice Quiz</button>
+    <button class="big green" data-act="quiz"${qdis}>📝 Practice OINA quiz</button>
+    <button class="big blue" data-act="label"${qdis}>🖼️ Label the Muscle</button>
     <div class="foot"><span>🔥 Best streak: <b>${best}</b></span><button class="tbtn" data-act="theme">${isDark() ? '☀️ Light mode' : '🌙 Dark mode'}</button></div>`;
+}
+
+/* ---------- A–Z list ---------- */
+function listView() {
+  const all = muscles.slice().sort((a, b) => a.name.localeCompare(b.name));
+  let letter = '', rows = '';
+  all.forEach(m => {
+    const L = m.name[0].toUpperCase();
+    if (L !== letter) { letter = L; rows += `<div class="azl">${L}</div>`; }
+    rows += `<button class="azi" data-act="azopen" data-v="${m.name}"><span>${removed.includes(m.name) ? '🚫 ' : ''}${m.name}</span><small>Day ${m.day}</small></button>`;
+  });
+  app.innerHTML = `
+    <div class="bar"><button class="back" data-act="menu">← Menu</button><span class="pill">${all.length} muscles · A–Z</span></div>
+    <div class="azlist" role="list">${rows}</div>`;
 }
 
 /* ---------- Flashcards ---------- */
@@ -211,7 +240,7 @@ function detail(m, withPic) {
   return `<h3>${m.name}</h3>${withPic ? pic(m, 'mimg') : ''}${fact('O', 'o', m.o)}${fact('I', 'i', m.i)}${fact('N', 'n', m.n)}${fact('A', 'a', m.a)}${m.notes ? `<div class="notes"><p class="nl">Side notes</p>${m.notes.map(n => `<p>${n}</p>`).join('')}</div>` : ''}`;
 }
 function cardsView() {
-  const d = S.deck, inRemoved = S.filter === 'removed';
+  const d = S.deck, inRemoved = S.browse ? !!(d[S.i] && removed.includes(d[S.i].name)) : S.filter === 'removed';
   if (!d.length) {
     app.innerHTML = `<div class="bar"><button class="back" data-act="menu">← Menu</button></div>
       <div class="card empty"><h2>Deck empty 🎉</h2><p>No cards left in this deck.</p>
@@ -220,7 +249,7 @@ function cardsView() {
   }
   const m = d[S.i];
   app.innerHTML = `
-    <div class="bar"><button class="back" data-act="menu">← Menu</button>
+    <div class="bar"><button class="back" data-act="${S.browse ? 'azlist' : 'menu'}">← ${S.browse ? 'List' : 'Menu'}</button>
       <span class="pill">${inRemoved ? '🚫 ' : ''}${S.i + 1} / ${d.length}</span></div>
     <div class="prog" role="progressbar" aria-valuemin="1" aria-valuemax="${d.length}" aria-valuenow="${S.i + 1}"><i style="width:${(S.i + 1) / d.length * 100}%"></i></div>
     <div class="fc" data-act="flip" role="button" tabindex="0" aria-label="Flip card">
@@ -244,6 +273,25 @@ function cardsView() {
 }
 
 /* ---------- Quiz ---------- */
+const GROUPS = [
+  ['Sternocleidomastoid', 'Anterior Scalene', 'Middle Scalene', 'Posterior Scalene', 'Levator Scapula', 'Splenius Cervicis', 'Splenius Capitis'],
+  ['Oblique Capitis Superior', 'Oblique Capitis Inferior', 'Rectus Capitis Posterior Minor', 'Rectus Capitis Posterior Major', 'Rectus Capitis Anterior', 'Rectus Capitis Lateralis'],
+  ['Longus Capitis', 'Longus Colli', 'Rectus Capitis Anterior', 'Rectus Capitis Lateralis', 'Anterior Scalene'],
+  ['Pectoralis Major', 'Pectoralis Minor', 'Subclavius', 'Serratus Anterior', 'Deltoid', 'Coracobrachialis'],
+  ['Latissimus Dorsi', 'Trapezius', 'Rhomboid Major', 'Rhomboid Minor', 'Levator Scapula', 'Teres Major'],
+  ['Teres Major', 'Teres Minor', 'Infraspinatus', 'Supraspinatus', 'Subscapularis', 'Deltoid'],
+  ['Biceps Brachii', 'Brachialis', 'Coracobrachialis', 'Triceps Brachii', 'Anconeus'],
+  ['Pronator Teres', 'Flexor Carpi Radialis', 'Palmaris Longus', 'Flexor Carpi Ulnaris', 'Flexor Digitorum Superficialis', 'Flexor Digitorum Profundus', 'Flexor Pollicis Longus', 'Pronator Quadratus']
+];
+function similarNames(t) {
+  // muscles sharing the most groups with t come first (random tie-break), then same day, then anything
+  const score = {};
+  GROUPS.filter(g => g.includes(t.name)).forEach(g => g.forEach(n => { if (n !== t.name) score[n] = (score[n] || 0) + 1; }));
+  const byScore = shuffle(Object.keys(score)).sort((a, b) => score[b] - score[a]);
+  const sameDay = shuffle(muscles.filter(m => m.day === t.day && m.name !== t.name).map(m => m.name));
+  const rest = shuffle(muscles.filter(m => m.name !== t.name).map(m => m.name));
+  return [...new Set([...byScore, ...sameDay, ...rest])];
+}
 function newQ() {
   if (!S.bag.length) {
     S.bag = shuffle(quizPool().slice());
@@ -251,15 +299,22 @@ function newQ() {
     if (S.q && l > 0 && S.bag[l].name === S.q.muscle) [S.bag[0], S.bag[l]] = [S.bag[l], S.bag[0]];
   }
   const t = S.bag.pop();
+  if (S.qtype === 'label') {
+    const opts = shuffle([t.name, ...similarNames(t).slice(0, 3)]);
+    S.q = { type: 'label', m: t, muscle: t.name, day: t.day, answer: t.name, opts, wrong: [], revealed: [], solved: false, counted: false };
+    S.qn++; S.qflip = false;
+    return;
+  }
   const p = Object.keys(PROPS)[Math.floor(Math.random() * 4)];
   const pool = [...new Set(muscles.map(m => m[p]))].filter(x => x !== t[p]);
   const opts = shuffle([t[p], ...shuffle(pool).slice(0, 3)]);
-  S.q = { m: t, muscle: t.name, day: t.day, prop: PROPS[p], answer: t[p], opts, wrong: [], solved: false, counted: false };
+  S.q = { m: t, muscle: t.name, day: t.day, prop: PROPS[p], answer: t[p], opts, wrong: [], revealed: [], solved: false, counted: false };
   S.qn++; S.qflip = false;
 }
 function answer(i) {
   const q = S.q;
   if (!q || q.solved || q.wrong.includes(i) || i < 0 || i >= q.opts.length) return;
+  if (hard && !q.revealed.includes(i)) { q.revealed = q.opts.map((_, j) => j); render(); return; }
   const ok = q.opts[i] === q.answer;
   if (!q.counted) {
     q.counted = true; S.total++;
@@ -275,7 +330,7 @@ function resultsView() {
     <div class="bar"><button class="back" data-act="menu">← Menu</button></div>
     <div class="card empty"><h2>Quiz complete 🎉</h2><div class="score">${S.score}/${n}</div>
       <p>${pct}% correct on the first try${S.maxStreak > 1 ? ' · 🔥 best streak ' + S.maxStreak : ''}${skipped > 0 ? ' · ' + skipped + ' skipped' : ''}</p></div>
-    <button class="big blue" data-act="quiz">Try again</button>`;
+    <button class="big blue" data-act="${S.qtype === 'label' ? 'label' : 'quiz'}">Try again</button>`;
 }
 function quizView() {
   if (S.done) return resultsView();
@@ -287,12 +342,12 @@ function quizView() {
       <span class="pill">First try: ${S.score}/${S.total}${S.total ? ' · ' + pct + '%' : ''}${S.streak > 1 ? ' · 🔥' + S.streak : ''}</span></div>
     ${fin ? `<div class="prog" role="progressbar" aria-valuemin="1" aria-valuemax="${S.qlen}" aria-valuenow="${S.qn}"><i style="width:${S.qn / S.qlen * 100}%"></i></div>` : ''}
     <p class="count" style="margin:0">${fin ? `Question ${S.qn} of ${S.qlen}` : `Question ${S.qn} · Endless Mode`}</p>
-    <section class="card q${S.qpop ? ' pop' : ''}" data-act="qflip" role="button" tabindex="0" aria-label="${S.qflip ? 'Back to question' : 'Show flash card'}">
+    ${q.type === 'label' ? `<section class="card q lab"><div class="qq"><p>Which <b>muscle</b> is highlighted?</p>${q.m.img ? `<img class="lq" src="${q.m.img}" alt="Muscle diagram" onerror="this.outerHTML='<p class=\\'noimg\\'>Image not found: ' + this.getAttribute('src') + '</p>'">` : '<p class="noimg">No image for this muscle</p>'}<span class="tag">Day ${q.day}</span></div></section>` : `<section class="card q${S.qpop ? ' pop' : ''}" data-act="qflip" role="button" tabindex="0" aria-label="${S.qflip ? 'Back to question' : 'Show flash card'}">
       ${S.qflip
         ? `<div class="back-face">${detail(q.m, true)}</div><span class="qnote ret">Click to return to question</span>`
         : `<div class="qq"><p>What is the <b>${q.prop}</b> of the:</p><h2>${q.muscle}?</h2><span class="qnote">Click for Flash Card</span><span class="tag">Day ${q.day}</span></div>`}
-    </section>
-    <div class="opts">${q.opts.map((o, i) => `<button class="opt${state(i)}" data-act="answer" data-v="${i}"${q.solved ? ' disabled style="opacity:1"' : ''}><kbd>${i + 1}</kbd><span>${mark(i)}${o}</span></button>`).join('')}</div>
+    </section>`}
+    <div class="opts">${q.opts.map((o, i) => { const cov = hard && !q.solved && !q.revealed.includes(i); return `<button class="opt${state(i)}${cov ? ' cov' : ''}" data-act="answer" data-v="${i}"${q.solved ? ' disabled style="opacity:1"' : ''}><kbd>${i + 1}</kbd><span>${cov ? 'Tap to reveal' : mark(i) + o}</span></button>`; }).join('')}</div>
     <p class="msg ${q.solved ? 'ok' : 'no'}" aria-live="polite">${q.solved ? 'SD silently nods in approval' : q.wrong.length ? 'SD scoffs in disgust' : ''}</p>
     <button class="big ${q.solved ? 'blue' : 'gray'}" style="font-size:1rem;${q.solved ? '' : 'color:inherit;box-shadow:none'}" data-act="nextq">${last ? 'Finish ✓' : 'Next →'}</button>`;
   S.qpop = false;
@@ -311,12 +366,19 @@ const act = {
     }
     store.set('oina_filter', S.filter); render();
   },
+  hard: () => { hard = !hard; store.set('oina_hard', hard); render(); },
   pics: () => { pics = !pics; store.set('oina_pics', pics); render(); },
   qrem: () => { qrem = !qrem; store.set('oina_qrem', qrem); render(); },
   qlen: v => { S.qlen = +v; store.set('oina_qlen', S.qlen); render(); },
-  qflip: () => { S.qflip = !S.qflip; S.qpop = true; render(); },
-  menu: () => { S.mode = 'menu'; render(); scrollTo(0, 0); },
-  cards: () => { S.mode = 'cards'; S.deck = active().slice(); S.i = 0; S.flip = false; render(); },
+  qflip: () => { if (S.q && S.q.type === 'label') return; S.qflip = !S.qflip; S.qpop = true; render(); },
+  menu: () => { S.browse = false; S.mode = 'menu'; render(); scrollTo(0, 0); },
+  azlist: () => { S.mode = 'list'; S.browse = false; render(); scrollTo(0, 0); },
+  azopen: v => {
+    S.deck = muscles.slice().sort((a, b) => a.name.localeCompare(b.name));
+    S.i = Math.max(0, S.deck.findIndex(m => m.name === v));
+    S.browse = true; S.flip = false; S.mode = 'cards'; render(); scrollTo(0, 0);
+  },
+  cards: () => { S.browse = false; S.mode = 'cards'; S.deck = active().slice(); S.i = 0; S.flip = false; render(); },
   flip: () => {
     S.flip = !S.flip;
     render();
@@ -329,8 +391,8 @@ const act = {
     if (!m) return;
     if (!removed.includes(m.name)) removed.push(m.name);
     store.set('oina_removed', removed);
-    S.deck.splice(S.i, 1);
-    S.i = Math.min(S.i, Math.max(0, S.deck.length - 1)); S.flip = false;
+    if (!S.browse) { S.deck.splice(S.i, 1); S.i = Math.min(S.i, Math.max(0, S.deck.length - 1)); }
+    S.flip = false;
     toast('Sent to removed pile 🚫'); render();
   },
   restore: () => {
@@ -338,11 +400,12 @@ const act = {
     if (!m) return;
     removed = removed.filter(n => n !== m.name);
     store.set('oina_removed', removed);
-    S.deck.splice(S.i, 1);
-    S.i = Math.min(S.i, Math.max(0, S.deck.length - 1)); S.flip = false;
+    if (!S.browse) { S.deck.splice(S.i, 1); S.i = Math.min(S.i, Math.max(0, S.deck.length - 1)); }
+    S.flip = false;
     toast('Restored ↩'); render();
   },
-  quiz: () => { S.mode = 'quiz'; S.score = S.total = S.streak = 0; S.bag = []; S.q = null; S.qn = 0; S.done = false; S.maxStreak = 0; newQ(); render(); },
+  label: () => { S.qtype = 'label'; S.mode = 'quiz'; S.score = S.total = S.streak = 0; S.bag = []; S.q = null; S.qn = 0; S.done = false; S.maxStreak = 0; newQ(); render(); },
+  quiz: () => { S.qtype = 'practice'; S.mode = 'quiz'; S.score = S.total = S.streak = 0; S.bag = []; S.q = null; S.qn = 0; S.done = false; S.maxStreak = 0; newQ(); render(); },
   answer: v => answer(+v),
   nextq: () => { if (S.qlen && S.qn >= S.qlen) S.done = true; else newQ(); render(); scrollTo(0, 0); },
   theme: () => { const t = isDark() ? 'light' : 'dark'; root.dataset.theme = t; store.set('oina_theme', t); render(); }
@@ -366,13 +429,13 @@ app.addEventListener('touchend', e => {
 addEventListener('keydown', e => {
   if (e.metaKey || e.ctrlKey || e.altKey) return;
   const k = e.key;
-  if (k === 'Escape' && S.mode !== 'menu') return act.menu();
+  if (k === 'Escape' && S.mode !== 'menu') return (S.mode === 'cards' && S.browse) ? act.azlist() : act.menu();
   if (e.target.tagName === 'BUTTON' && (k === ' ' || k === 'Enter')) return;
   if (S.mode === 'cards' && S.deck.length) {
     if (k === 'ArrowRight') act.next();
     else if (k === 'ArrowLeft') act.prev();
     else if (k === ' ' || k === 'Enter') { e.preventDefault(); act.flip(); }
-    else if (k === 'r' || k === 'R') S.filter === 'removed' ? act.restore() : act.remove();
+    else if (k === 'r' || k === 'R') (S.browse ? removed.includes(S.deck[S.i].name) : S.filter === 'removed') ? act.restore() : act.remove();
   } else if (S.mode === 'quiz') {
     if (S.done) return;
     if ((k === ' ' || k === 'Enter') && e.target.classList && e.target.classList.contains('q')) { e.preventDefault(); act.qflip(); }
