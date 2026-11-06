@@ -156,6 +156,7 @@ const muscles = [
   { day: 5, name: "Abductor Pollicis Longus", img: "images/abductor-pollicis-longus.jpg", o: "Posterior surface of radius and ulna, and interosseous membrane", i: "Base of first metacarpal", n: "Radial C6, <b>7, 8</b>", a: "Abduct the thumb (carpometacarpal joint). Extend the thumb (carpometacarpal joint). Abduct the wrist (radiocarpal joint)" },
   { day: 5, name: "Extensor Pollicis Brevis", img: "images/extensor-pollicis-brevis.jpg", o: "Posterior surface of radius and interosseous membrane", i: "Base of proximal phalanx of thumb", n: "Radial C6, <b>7, 8</b>", a: "Extend the thumb (interphalangeal joint). Extend the thumb (metacarpophalangeal and carpometacarpal joints). Abduct the wrist (radiocarpal joint)" },
   { day: 5, name: "Extensor Pollicis Longus", img: "images/extensor-pollicis-longus.jpg", o: "Posterior surface of ulna and interosseous membrane", i: "Base of distal phalanx of thumb", n: "Radial C6, <b>7, 8</b>", a: "Extend the thumb (interphalangeal joint). Extend the thumb (metacarpophalangeal and carpometacarpal joints). Abduct the wrist (radiocarpal joint)" },
+  { day: 5, name: "Extensor Indicis", img: "images/extensor-indicis.jpg", o: "Posterior surface of distal shaft of ulna and interosseous membrane", i: "Tendon of the extensor digitorum at the level of the second metacarpal", n: "Radial C6, <b>7, 8</b>", a: "Extend the second finger (metacarpophalangeal joint). Adduct the second finger. May assist to extend the wrist (radiocarpal joint)" }
 ];
 
 const $ = s => document.querySelector(s), app = $('#app'), hero = $('#hero');
@@ -295,8 +296,8 @@ const GROUPS = [
   ['Biceps Brachii', 'Brachialis', 'Coracobrachialis', 'Triceps Brachii', 'Anconeus'],
   ['Pronator Teres', 'Flexor Carpi Radialis', 'Palmaris Longus', 'Flexor Carpi Ulnaris', 'Flexor Digitorum Superficialis', 'Flexor Digitorum Profundus', 'Flexor Pollicis Longus', 'Pronator Quadratus'],
   ['Brachioradialis', 'Extensor Carpi Radialis Longus', 'Extensor Carpi Radialis Brevis', 'Extensor Carpi Ulnaris', 'Supinator'],
-  ['Extensor Carpi Radialis Longus', 'Extensor Carpi Radialis Brevis', 'Extensor Carpi Ulnaris', 'Extensor Digitorum', 'Extensor Digiti Minimi'],
-  ['Abductor Pollicis Longus', 'Extensor Pollicis Brevis', 'Extensor Pollicis Longus', 'Extensor Digitorum', 'Extensor Digiti Minimi'],
+  ['Extensor Carpi Radialis Longus', 'Extensor Carpi Radialis Brevis', 'Extensor Carpi Ulnaris', 'Extensor Digitorum', 'Extensor Digiti Minimi', 'Extensor Indicis'],
+  ['Abductor Pollicis Longus', 'Extensor Pollicis Brevis', 'Extensor Pollicis Longus', 'Extensor Indicis', 'Extensor Digitorum'],
   ['Pronator Teres', 'Brachioradialis', 'Supinator']
 ];
 function similarNames(t) {
