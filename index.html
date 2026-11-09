@@ -156,7 +156,17 @@ const muscles = [
   { day: 5, name: "Abductor Pollicis Longus", img: "images/abductor-pollicis-longus.jpg", o: "Posterior surface of radius and ulna, and interosseous membrane", i: "Base of first metacarpal", n: "Radial C6, <b>7, 8</b>", a: "Abduct the thumb (carpometacarpal joint). Extend the thumb (carpometacarpal joint). Abduct the wrist (radiocarpal joint)" },
   { day: 5, name: "Extensor Pollicis Brevis", img: "images/extensor-pollicis-brevis.jpg", o: "Posterior surface of radius and interosseous membrane", i: "Base of proximal phalanx of thumb", n: "Radial C6, <b>7, 8</b>", a: "Extend the thumb (interphalangeal joint). Extend the thumb (metacarpophalangeal and carpometacarpal joints). Abduct the wrist (radiocarpal joint)" },
   { day: 5, name: "Extensor Pollicis Longus", img: "images/extensor-pollicis-longus.jpg", o: "Posterior surface of ulna and interosseous membrane", i: "Base of distal phalanx of thumb", n: "Radial C6, <b>7, 8</b>", a: "Extend the thumb (interphalangeal joint). Extend the thumb (metacarpophalangeal and carpometacarpal joints). Abduct the wrist (radiocarpal joint)" },
-  { day: 5, name: "Extensor Indicis", img: "images/extensor-indicis.jpg", o: "Posterior surface of distal shaft of ulna and interosseous membrane", i: "Tendon of the extensor digitorum at the level of the second metacarpal", n: "Radial C6, <b>7, 8</b>", a: "Extend the second finger (metacarpophalangeal joint). Adduct the second finger. May assist to extend the wrist (radiocarpal joint)" }
+  { day: 5, name: "Extensor Indicis", img: "images/extensor-indicis.jpg", o: "Posterior surface of distal shaft of ulna and interosseous membrane", i: "Tendon of the extensor digitorum at the level of the second metacarpal", n: "Radial C6, <b>7, 8</b>", a: "Extend the second finger (metacarpophalangeal joint). Adduct the second finger. May assist to extend the wrist (radiocarpal joint)" },
+  { day: 6, name: "Abductor Pollicis Brevis", img: "images/abductor-pollicis-brevis.jpg", o: "Flexor retinaculum, trapezium and scaphoid tubercles", i: "Base of proximal phalanx of thumb", n: "Median C6, 7, 8, T1", a: "Abduct the thumb (carpometacarpal and metacarpophalangeal joints). Assist in opposition of the thumb" },
+  { day: 6, name: "Adductor Pollicis", img: "images/adductor-pollicis.jpg", o: "Capitate, second and third metacarpals", i: "Base of proximal phalanx of thumb", n: "Ulnar C<b>8</b>, T1", a: "Adduct the thumb (carpometacarpal and metacarpophalangeal joints). Assist to flex the thumb (metacarpophalangeal joint)" },
+  { day: 6, name: "Opponens Pollicis", img: "images/opponens-pollicis.jpg", o: "Flexor retinaculum and tubercle of the trapezium", i: "Entire length of first metacarpal bone, radial surface", n: "Median C6, 7, 8, T1", a: "Opposition of the thumb at the carpometacarpal joint (bringing the pads of the thumb and fifth finger together)" },
+  { day: 6, name: "Flexor Pollicis Brevis", img: "images/flexor-pollicis-brevis.jpg", o: "Flexor retinaculum and tubercle of the trapezium (superficial head); trapezoid and capitate (deep head)", i: "Base of proximal phalanx of thumb", n: "Median C6, 7, 8, T1 and Ulnar C8, T1", a: "Flex the thumb (metacarpophalangeal joint). Assist in opposition of the thumb" },
+  { day: 6, name: "Abductor Digiti Minimi", img: "images/abductor-digiti-minimi.jpg", o: "Pisiform and tendon of flexor carpi ulnaris", i: "Base of proximal phalanx of fifth finger, ulnar surface", n: "Ulnar C(7), <b>8</b>, T1", a: "Abduct the fifth finger (metacarpophalangeal joint). Assist in opposition of the fifth finger toward the thumb (metacarpophalangeal joint)" },
+  { day: 6, name: "Flexor Digiti Minimi Brevis", img: "images/flexor-digiti-minimi-brevis.jpg", o: "Hook of hamate and flexor retinaculum", i: "Base of proximal phalanx of fifth finger, palmar surface", n: "Ulnar C(7), <b>8</b>, T1", a: "Flex the fifth finger (metacarpophalangeal joint). Assist in opposition of the fifth finger toward the thumb" },
+  { day: 6, name: "Opponens Digiti Minimi", img: "images/opponens-digiti-minimi.jpg", o: "Hook of hamate and flexor retinaculum", i: "Shaft of fifth metacarpal, ulnar surface", n: "Ulnar C(7), <b>8</b>, T1", a: "Opposition of the fifth finger at the carpometacarpal joint" },
+  { day: 6, name: "Lumbricals", img: "images/lumbricals.jpg", o: "Surfaces of the flexor digitorum profundus tendons", i: "Extensor aponeurosis on dorsal surface of phalanges", n: "Second and third fingers: Median C(6), 7, <b>8</b>, T1; fourth and fifth fingers: Ulnar C(7), <b>8</b>, T1", a: "Extend the second through fifth fingers at the interphalangeal joints. Flex the second through fifth fingers at the metacarpophalangeal joints" },
+  { day: 6, name: "Dorsal Interossei", img: "images/dorsal-interossei.jpg", o: "Adjacent sides of all metacarpals", i: "Base of the proximal phalanx of the second, third and fourth fingers and the extensor aponeurosis", n: "Ulnar C<b>8</b>, T1", a: "Abduct the second, third and fourth fingers at the metacarpophalangeal joints. Assist to flex the second, third and fourth fingers at the metacarpophalangeal joints. Assist to extend the second, third and fourth fingers at the interphalangeal joints" },
+  { day: 6, name: "Palmar Interossei", img: "images/palmar-interossei.jpg", o: "Base of first, second, fourth and fifth metacarpals", i: "Base of the proximal phalanx of the related finger and the extensor aponeurosis", n: "Ulnar C<b>8</b>, T1", a: "Adduct the thumb, second, fourth and fifth fingers toward the third finger. Assist to flex the thumb, second, fourth and fifth fingers at the metacarpophalangeal joints. Assist to extend the thumb, second, fourth and fifth fingers at the interphalangeal joints" }
 ];
 
 const $ = s => document.querySelector(s), app = $('#app'), hero = $('#hero');
@@ -170,7 +180,7 @@ const theme = store.get('oina_theme', null);
 if (theme) root.dataset.theme = theme;
 const isDark = () => (root.dataset.theme || (mq.matches ? 'dark' : 'light')) === 'dark';
 const PROPS = { o: 'Origin', i: 'Insertion', n: 'Nerve', a: 'Action' };
-const DAYS = [1, 2, 3, 4, 5];
+const DAYS = [1, 2, 3, 4, 5, 6];
 function normFilter(v) {
   if (v === 'removed') return 'removed';
   if (v === 'all') return DAYS.slice();
@@ -210,7 +220,7 @@ function menuView() {
   app.innerHTML = `
     <section class="card">
       <p class="label">Study set · tap to select multiple days</p>
-      <div class="seg">${seg('1', 'Day 1')}${seg('2', 'Day 2')}${seg('3', 'Day 3')}${seg('4', 'Day 4')}${seg('5', 'Day 5')}${seg('all', 'All')}</div>
+      <div class="seg">${seg('1', 'Day 1')}${seg('2', 'Day 2')}${seg('3', 'Day 3')}${seg('4', 'Day 4')}${seg('5', 'Day 5')}${seg('6', 'Day 6')}${seg('all', 'All')}</div>
       <div class="seg" style="margin-top:.7rem">${seg('removed', '🚫 Removed (' + removed.length + ')', ' style="padding:.8rem .3rem;font-size:.85rem"')}<button data-act="azlist" style="padding:.8rem .3rem;font-size:.85rem">🔍 A–Z list</button></div>
       <p class="count">${n} muscle${n === 1 ? '' : 's'} selected${!n ? (f === 'removed' ? ' — no cards have been removed yet' : ' — select at least one day') : ''}</p>
     </section>
@@ -298,7 +308,11 @@ const GROUPS = [
   ['Brachioradialis', 'Extensor Carpi Radialis Longus', 'Extensor Carpi Radialis Brevis', 'Extensor Carpi Ulnaris', 'Supinator'],
   ['Extensor Carpi Radialis Longus', 'Extensor Carpi Radialis Brevis', 'Extensor Carpi Ulnaris', 'Extensor Digitorum', 'Extensor Digiti Minimi', 'Extensor Indicis'],
   ['Abductor Pollicis Longus', 'Extensor Pollicis Brevis', 'Extensor Pollicis Longus', 'Extensor Indicis', 'Extensor Digitorum'],
-  ['Pronator Teres', 'Brachioradialis', 'Supinator']
+  ['Pronator Teres', 'Brachioradialis', 'Supinator'],
+  ['Abductor Pollicis Brevis', 'Adductor Pollicis', 'Opponens Pollicis', 'Flexor Pollicis Brevis'],
+  ['Abductor Digiti Minimi', 'Flexor Digiti Minimi Brevis', 'Opponens Digiti Minimi'],
+  ['Opponens Pollicis', 'Opponens Digiti Minimi', 'Abductor Pollicis Brevis', 'Abductor Digiti Minimi'],
+  ['Lumbricals', 'Dorsal Interossei', 'Palmar Interossei']
 ];
 function similarNames(t) {
   // muscles sharing the most groups with t come first (random tie-break), then same day, then anything
