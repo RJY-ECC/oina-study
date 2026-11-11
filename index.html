@@ -90,6 +90,7 @@ h1{margin:.8rem 0 0;font-size:1.9rem;font-weight:800;color:var(--head);letter-sp
 #toast.show{opacity:1;transform:translate(-50%,0)}
 @media(hover:hover){.big:hover{filter:brightness(1.08)}.opt:hover:not(.ok):not(.no){border-color:var(--brand)}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.alias{display:block;margin-top:.15rem;font-size:.85rem;font-weight:600;font-style:italic;color:var(--mute)}
 </style>
 </head>
 <body>
@@ -166,7 +167,15 @@ const muscles = [
   { day: 6, name: "Opponens Digiti Minimi", img: "images/opponens-digiti-minimi.jpg", o: "Hook of hamate and flexor retinaculum", i: "Shaft of fifth metacarpal, ulnar surface", n: "Ulnar C(7), <b>8</b>, T1", a: "Opposition of the fifth finger at the carpometacarpal joint" },
   { day: 6, name: "Lumbricals", img: "images/lumbricals.jpg", o: "Surfaces of the flexor digitorum profundus tendons", i: "Extensor aponeurosis on dorsal surface of phalanges", n: "Second and third fingers: Median C(6), 7, <b>8</b>, T1; fourth and fifth fingers: Ulnar C(7), <b>8</b>, T1", a: "Extend the second through fifth fingers at the interphalangeal joints. Flex the second through fifth fingers at the metacarpophalangeal joints" },
   { day: 6, name: "Dorsal Interossei", img: "images/dorsal-interossei.jpg", o: "Adjacent sides of all metacarpals", i: "Base of the proximal phalanx of the second, third and fourth fingers and the extensor aponeurosis", n: "Ulnar C<b>8</b>, T1", a: "Abduct the second, third and fourth fingers at the metacarpophalangeal joints. Assist to flex the second, third and fourth fingers at the metacarpophalangeal joints. Assist to extend the second, third and fourth fingers at the interphalangeal joints" },
-  { day: 6, name: "Palmar Interossei", img: "images/palmar-interossei.jpg", o: "Base of first, second, fourth and fifth metacarpals", i: "Base of the proximal phalanx of the related finger and the extensor aponeurosis", n: "Ulnar C<b>8</b>, T1", a: "Adduct the thumb, second, fourth and fifth fingers toward the third finger. Assist to flex the thumb, second, fourth and fifth fingers at the metacarpophalangeal joints. Assist to extend the thumb, second, fourth and fifth fingers at the interphalangeal joints" }
+  { day: 6, name: "Palmar Interossei", img: "images/palmar-interossei.jpg", o: "Base of first, second, fourth and fifth metacarpals", i: "Base of the proximal phalanx of the related finger and the extensor aponeurosis", n: "Ulnar C<b>8</b>, T1", a: "Adduct the thumb, second, fourth and fifth fingers toward the third finger. Assist to flex the thumb, second, fourth and fifth fingers at the metacarpophalangeal joints. Assist to extend the thumb, second, fourth and fifth fingers at the interphalangeal joints" },
+  { day: 7, name: "Rectus Abdominis", img: "images/rectus-abdominis.jpg", o: "Pubic crest, pubic symphysis", i: "Cartilage of fifth, sixth, and seventh ribs and xiphoid process", n: "T5, 6, <b>T7–11</b>, T12, ventral rami", a: "Flex the vertebral column. Tilt pelvis posteriorly" },
+  { day: 7, name: "External Oblique", img: "images/external-oblique.jpg", o: "External surfaces of fifth to twelfth ribs", i: "Anterior part of the iliac crest, rectus sheath to linea alba", n: "(T5, 6), <b>T7–11</b>, T12", a: "Unilaterally: Laterally flex vertebral column to the same side, Rotate vertebral column to the opposite side. Bilaterally: Flex the vertebral column, Compress abdominal contents" },
+  { day: 7, name: "Internal Oblique", img: "images/internal-oblique.jpg", o: "Lateral inguinal ligament, iliac crest, and thoracolumbar fascia", i: "Internal surface of lower three ribs, rectus sheath to linea alba", n: "T7, 8, <b>T9–12</b>, L1, iliohypogastric and ilioinguinal, ventral rami", a: "Unilaterally: Laterally flex vertebral column to the same side, Rotate vertebral column to the same side. Bilaterally: Flex the vertebral column, Compress abdominal contents" },
+  { day: 7, name: "Transverse Abdominis", img: "images/transverse-abdominis.jpg", o: "Lateral inguinal ligament, iliac crest, thoracolumbar fascia, and internal surface of lower six ribs", i: "Rectus sheath to linea alba", n: "<b>T7-12</b>, L1, iliohypogastric and ilioinguinal, ventral divisions", a: "Compress abdominal contents" },
+  { day: 7, name: "Quadratus Lumborum", sub: "Hip Hiker", img: "images/quadratus-lumborum.jpg", o: "Iliac crest and iliolumbar ligament", i: "Inferior border of the 12th rib and transverse processes of L1–L4", n: "Subcostal nerve (T12), ventral rami of L1–L4", a: "Unilaterally: Laterally flex the vertebral column to the same side, Elevate the pelvis (hip hike). Bilaterally: Extend the lumbar spine, Stabilize the 12th rib during respiration" },
+  { day: 7, name: "External Intercostals", img: "images/external-intercostals.jpg", o: "Inferior border of the rib above", i: "Superior border of the rib below", n: "Thoracic", a: "Draw the ribs superiorly (increasing the space of the thoracic cavity) to assist with inhalation" },
+  { day: 7, name: "Internal Intercostals", img: "images/internal-intercostals.jpg", o: "Inferior border of the rib above", i: "Superior border of the rib below", n: "Thoracic", a: "Draw the ribs inferiorly (decreasing the space of the thoracic cavity) to assist with exhalation" },
+  { day: 7, name: "Diaphragm", img: "images/diaphragm.jpg", o: "<i>Costal attachment:</i> Inner surface of lower six ribs. <i>Lumbar attachment:</i> Upper two or three lumbar vertebrae. <i>Sternal attachment:</i> Inner part of xiphoid process", i: "Central tendon", n: "Phrenic C3, <b>4</b>, 5", a: "Draw down the central tendon of the diaphragm. Increase the volume of the thoracic cavity during inhalation" },
 ];
 
 const $ = s => document.querySelector(s), app = $('#app'), hero = $('#hero');
@@ -180,7 +189,7 @@ const theme = store.get('oina_theme', null);
 if (theme) root.dataset.theme = theme;
 const isDark = () => (root.dataset.theme || (mq.matches ? 'dark' : 'light')) === 'dark';
 const PROPS = { o: 'Origin', i: 'Insertion', n: 'Nerve', a: 'Action' };
-const DAYS = [1, 2, 3, 4, 5, 6];
+const DAYS = [1, 2, 3, 4, 5, 6, 7];
 function normFilter(v) {
   if (v === 'removed') return 'removed';
   if (v === 'all') return DAYS.slice();
@@ -222,7 +231,7 @@ function menuView() {
   app.innerHTML = `
     <section class="card">
       <p class="label">Study set · tap to select multiple days</p>
-      <div class="seg">${seg('1', 'Day 1')}${seg('2', 'Day 2')}${seg('3', 'Day 3')}${seg('4', 'Day 4')}${seg('5', 'Day 5')}${seg('6', 'Day 6')}${seg('all', 'All')}</div>
+      <div class="seg">${seg('1', 'Day 1')}${seg('2', 'Day 2')}${seg('3', 'Day 3')}${seg('4', 'Day 4')}${seg('5', 'Day 5')}${seg('6', 'Day 6')}${seg('7', 'Day 7')}${seg('all', 'All')}</div>
       <div class="seg" style="margin-top:.7rem">${seg('removed', '🚫 Removed (' + removed.length + ')', ' style="padding:.8rem .3rem;font-size:.85rem"')}<button data-act="azlist" style="padding:.8rem .3rem;font-size:.85rem">🔍 A–Z list</button></div>
       <p class="count">${n} muscle${n === 1 ? '' : 's'} selected${!n ? (f === 'removed' ? ' — no cards have been removed yet' : ' — select at least one day') : ''}</p>
     </section>
@@ -262,9 +271,10 @@ function listView() {
 function pic(m, cls) {
   return pics && m.img ? `<img class="${cls}" src="${m.img}" alt="${m.name} diagram" loading="lazy" onerror="this.outerHTML='<p class=\\'noimg\\'>Image not found: ' + this.getAttribute('src') + '</p>'">` : '';
 }
+const alias = m => m.sub ? `<span class="alias">${m.sub}</span>` : '';
 function detail(m, withPic) {
   const fact = (k, c, t) => `<p class="fact"><b style="color:var(--${c})">${k}:</b> ${t}</p>`;
-  return `<h3>${m.name}</h3>${withPic ? pic(m, 'mimg') : ''}${fact('O', 'o', m.o)}${fact('I', 'i', m.i)}${fact('N', 'n', m.n)}${fact('A', 'a', m.a)}${m.notes ? `<div class="notes"><p class="nl">Side notes</p>${m.notes.map(n => `<p>${n}</p>`).join('')}</div>` : ''}`;
+  return `<h3>${m.name}${alias(m)}</h3>${withPic ? pic(m, 'mimg') : ''}${fact('O', 'o', m.o)}${fact('I', 'i', m.i)}${fact('N', 'n', m.n)}${fact('A', 'a', m.a)}${m.notes ? `<div class="notes"><p class="nl">Side notes</p>${m.notes.map(n => `<p>${n}</p>`).join('')}</div>` : ''}`;
 }
 function cardsView() {
   const d = S.deck, inRemoved = S.browse ? !!(d[S.i] && removed.includes(d[S.i].name)) : S.filter === 'removed';
@@ -283,8 +293,8 @@ function cardsView() {
       ${S.flip
         ? `<div class="back-face">${detail(m)}</div>`
         : pics && m.img
-          ? `<div class="imgface"><h2>${m.name}</h2>${pic(m, 'bigimg')}</div>`
-          : `<h2>${m.name}</h2>`}
+          ? `<div class="imgface"><h2>${m.name}${alias(m)}</h2>${pic(m, 'bigimg')}</div>`
+          : `<h2>${m.name}${alias(m)}</h2>`}
       <span class="hint">Tap to flip · swipe for next</span>
     </div>
     <div class="row">
@@ -317,7 +327,10 @@ const GROUPS = [
   ['Abductor Pollicis Brevis', 'Adductor Pollicis', 'Opponens Pollicis', 'Flexor Pollicis Brevis'],
   ['Abductor Digiti Minimi', 'Flexor Digiti Minimi Brevis', 'Opponens Digiti Minimi'],
   ['Opponens Pollicis', 'Opponens Digiti Minimi', 'Abductor Pollicis Brevis', 'Abductor Digiti Minimi'],
-  ['Lumbricals', 'Dorsal Interossei', 'Palmar Interossei']
+  ['Lumbricals', 'Dorsal Interossei', 'Palmar Interossei'],
+  ['Rectus Abdominis', 'External Oblique', 'Internal Oblique', 'Transverse Abdominis', 'Quadratus Lumborum'],
+  ['External Oblique', 'Internal Oblique', 'External Intercostals', 'Internal Intercostals'],
+  ['External Intercostals', 'Internal Intercostals', 'Diaphragm']
 ];
 function similarNames(t) {
   // muscles sharing the most groups with t come first (random tie-break), then same day, then anything
@@ -415,7 +428,7 @@ function quizView() {
     ${q.type === 'label' ? `<section class="card q lab"><div class="qq"><p>Which <b>muscle</b> is highlighted?</p>${q.m.img ? `<img class="lq" src="${q.m.img}" alt="Muscle diagram" onerror="this.outerHTML='<p class=\\'noimg\\'>Image not found: ' + this.getAttribute('src') + '</p>'">` : '<p class="noimg">No image for this muscle</p>'}<span class="tag">Day ${q.day}</span></div></section>` : `<section class="card q${S.qpop ? ' pop' : ''}" data-act="qflip" role="button" tabindex="0" aria-label="${S.qflip ? 'Back to question' : 'Show flash card'}">
       ${S.qflip
         ? `<div class="back-face">${detail(q.m, true)}</div><span class="qnote ret">Click to return to question</span>`
-        : `<div class="qq"><p>What is the <b>${q.prop}</b> of the:</p><h2>${q.muscle}?</h2><span class="qnote">Click for Flash Card</span><span class="tag">Day ${q.day}</span></div>`}
+        : `<div class="qq"><p>What is the <b>${q.prop}</b> of the:</p><h2>${q.muscle}?${alias(q.m)}</h2><span class="qnote">Click for Flash Card</span><span class="tag">Day ${q.day}</span></div>`}
     </section>`}
     <div class="opts">${q.opts.map((o, i) => { const cov = hard && !q.solved && !q.revealed.includes(i); return `<button class="opt${state(i)}${cov ? ' cov' : ''}" data-act="answer" data-v="${i}"${q.solved ? ' disabled style="opacity:1"' : ''}><kbd>${i + 1}</kbd><span>${cov ? 'Tap to reveal' : mark(i) + o}</span></button>`; }).join('')}</div>
     <p class="msg ${q.solved ? 'ok' : 'no'}" aria-live="polite">${q.solved ? 'SD silently nods in approval' : q.wrong.length ? 'SD scoffs in disgust' : ''}</p>
