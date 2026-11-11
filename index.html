@@ -188,7 +188,8 @@ function normFilter(v) {
   if (DAYS.includes(+v)) return [+v];
   return DAYS.slice();
 }
-const S = { mode: 'menu', filter: normFilter(store.get('oina_filter', 'all')), qlen: store.get('oina_qlen', 10), deck: [], i: 0, flip: false, score: 0, total: 0, streak: 0, q: null, bag: [], qn: 0, done: false, qflip: false, qpop: false, maxStreak: 0 };
+const S = { mode: 'menu', filter: normFilter(store.get('oina_filter', 'all')), qlen: store.get('oina_qlen', 10), deck: [], i: 0, flip: false, score: 0, total: 0, streak: 0, q: null, bag: [], qn: 0, done: false, qflip: false, qpop: false, maxStreak: 0, qprop: store.get('oina_qprop', 'all') };
+if (!['all', 'o', 'i', 'n', 'a'].includes(S.qprop)) S.qprop = 'all';
 if (![0, 5, 10, 20].includes(S.qlen)) S.qlen = 10;
 
 function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
@@ -217,6 +218,7 @@ function menuView() {
   const isOn = v => v === 'removed' ? f === v : str ? false : v === 'all' ? f.length === DAYS.length : f.includes(+v);
   const seg = (v, l, x = '') => `<button data-act="filter" data-v="${v}"${x} class="${isOn(v) ? 'on' : ''}" aria-pressed="${isOn(v)}">${l}</button>`;
   const qc = (v, l, x = '') => `<button data-act="qlen" data-v="${v}"${x} class="${S.qlen === v ? 'on' : ''}" aria-pressed="${S.qlen === v}">${l}</button>`;
+  const qp = (v, l) => `<button data-act="qprop" data-v="${v}" style="font-size:.72rem;padding:.6rem .1rem" class="${S.qprop === v ? 'on' : ''}" aria-pressed="${S.qprop === v}">${l}</button>`;
   app.innerHTML = `
     <section class="card">
       <p class="label">Study set · tap to select multiple days</p>
@@ -230,7 +232,9 @@ function menuView() {
       <button class="ptog${hard ? ' on' : ''}" data-act="hard" aria-pressed="${hard}">🔒 Quiz Hard Mode: ${hard ? 'On' : 'Off'}</button>
     </div>
     <section class="card">
-      <p class="label">Number of questions</p>
+      <p class="label">Practice quiz focus</p>
+      <div class="chips">${qp('all', 'Mixed')}${qp('o', 'Origin')}${qp('i', 'Insertion')}${qp('n', 'Nerve')}${qp('a', 'Action')}</div>
+      <p class="label" style="margin-top:1rem">Number of questions</p>
       <div class="chips">${qc(5, '5')}${qc(10, '10')}${qc(20, '20')}${qc(0, 'Endless Mode', ' style="flex:2"')}</div>
       ${f === 'removed' ? '' : `<div class="chips" style="margin-top:.6rem"><button data-act="qrem" class="${qrem ? 'on' : ''}" aria-pressed="${qrem}">${qrem ? '☑' : '☐'} Include removed cards in quiz</button></div>`}
       <p class="count">${qn} card${qn === 1 ? '' : 's'} in quiz pool</p>
@@ -289,6 +293,7 @@ function cardsView() {
         ? '<button class="prime" data-act="restore">↩ Restore</button>'
         : '<button class="red" data-act="remove">🚫 Remove</button>'}
     </div>
+    ${S.filter === 'removed' && !S.browse ? '<button class="amber" style="padding:.85rem;font-weight:700" data-act="restoreAll">↩ Restore all removed cards</button>' : ''}
     <div class="row">
       <button class="gray" data-act="prev"${S.i ? '' : ' disabled'}>Prev</button>
       <button class="prime" data-act="next"${S.i < d.length - 1 ? '' : ' disabled'}>Next</button>
@@ -323,6 +328,37 @@ function similarNames(t) {
   const rest = shuffle(muscles.filter(m => m.name !== t.name).map(m => m.name));
   return [...new Set([...byScore, ...sameDay, ...rest])];
 }
+/* ---------- Harder distractors ---------- */
+const STOP = new Set(['the', 'of', 'and', 'a', 'an', 'to', 'at', 'in', 'on', 'or', 'with', 'from', 'by', 'for', 'its', 'as']);
+const plain = s => s.replace(/<[^>]*>/g, ' ');
+const jac = (a, b) => { if (!a.size || !b.size) return 0; let n = 0; a.forEach(x => b.has(x) && n++); return n / (a.size + b.size - n); };
+const subset = (a, b) => a.size > 0 && [...a].every(x => b.has(x));
+const same = (a, b) => a.size === b.size && subset(a, b);
+const toks = s => new Set(plain(s).toLowerCase().split(/[^a-z0-9]+/).filter(w => w && !STOP.has(w)));
+// s = how alike two answers look; dup = so alike they could both be "right", so never pair them
+function likeness(p, a, b) {
+  const x = toks(a), y = toks(b), j = jac(x, y);
+  return { s: j, dup: j >= .9 || subset(x, y) || subset(y, x) };
+}
+function distractors(t, p) {
+  const rel = {};
+  GROUPS.filter(g => g.includes(t.name)).forEach(g => g.forEach(n => { if (n !== t.name) rel[n] = (rel[n] || 0) + 1; }));
+  const ans = t[p], ranked = muscles.filter(m => m.name !== t.name).map(m => {
+    const r = likeness(p, ans, m[p]), gap = Math.abs(ans.length - m[p].length) / Math.max(ans.length, m[p].length);
+    return { text: m[p], dup: r.dup, score: r.s * 3 + (rel[m.name] || 0) * 1.2 + (m.day === t.day ? .5 : 0) + (1 - gap) + Math.random() * .8 };
+  }).sort((a, b) => b.score - a.score);
+  const out = [];
+  for (const c of ranked) {
+    if (out.length === 3) break;
+    if (c.dup || out.some(o => likeness(p, o, c.text).dup)) continue;
+    out.push(c.text);
+  }
+  for (const c of ranked) { // safety net: only if too few distinct lookalikes exist
+    if (out.length === 3) break;
+    if (c.text !== ans && !out.includes(c.text)) out.push(c.text);
+  }
+  return out;
+}
 function newQ() {
   if (!S.bag.length) {
     S.bag = shuffle(quizPool().slice());
@@ -336,9 +372,12 @@ function newQ() {
     S.qn++; S.qflip = false;
     return;
   }
-  const p = Object.keys(PROPS)[Math.floor(Math.random() * 4)];
-  const pool = [...new Set(muscles.map(m => m[p]))].filter(x => x !== t[p]);
-  const opts = shuffle([t[p], ...shuffle(pool).slice(0, 3)]);
+  const p = S.qprop !== 'all' ? S.qprop : Object.keys(PROPS)[Math.floor(Math.random() * 4)];
+  // nerves: random wrong answers (no need to memorize exact root levels); everything else: lookalike distractors
+  const wrong = p === 'n'
+    ? shuffle([...new Set(muscles.map(m => m[p]))].filter(x => x !== t[p])).slice(0, 3)
+    : distractors(t, p);
+  const opts = shuffle([t[p], ...wrong]);
   S.q = { m: t, muscle: t.name, day: t.day, prop: PROPS[p], answer: t[p], opts, wrong: [], revealed: [], solved: false, counted: false };
   S.qn++; S.qflip = false;
 }
@@ -400,6 +439,7 @@ const act = {
   hard: () => { hard = !hard; store.set('oina_hard', hard); render(); },
   pics: () => { pics = !pics; store.set('oina_pics', pics); render(); },
   qrem: () => { qrem = !qrem; store.set('oina_qrem', qrem); render(); },
+  qprop: v => { S.qprop = v; store.set('oina_qprop', v); render(); },
   qlen: v => { S.qlen = +v; store.set('oina_qlen', S.qlen); render(); },
   qflip: () => { if (S.q && S.q.type === 'label') return; S.qflip = !S.qflip; S.qpop = true; render(); },
   menu: () => { S.browse = false; S.mode = 'menu'; render(); scrollTo(0, 0); },
@@ -425,6 +465,11 @@ const act = {
     if (!S.browse) { S.deck.splice(S.i, 1); S.i = Math.min(S.i, Math.max(0, S.deck.length - 1)); }
     S.flip = false;
     toast('Sent to removed pile 🚫'); render();
+  },
+  restoreAll: () => {
+    if (!removed.length) return;
+    removed = []; store.set('oina_removed', removed);
+    toast('All cards restored ↩'); act.menu();
   },
   restore: () => {
     const m = S.deck[S.i];
