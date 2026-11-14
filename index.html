@@ -266,8 +266,8 @@ function noteView() {
   app.innerHTML = `
     <div class="bar"><button class="back" data-act="menu">← Menu</button></div>
     <section class="card notepage">
-      <p>If you think there is something that can be better or written wrong, please let me know. - Ryan Yun.</p>
-      <p>And if you think this app/site has been helpful then you can thank me by buying me a coffee via PTA group donation.</p>
+      <p>If you have suggestions that can better the app, whether it’s a feature or if details are written poorly, let me know, and I’ll try to optimize it. - Ryan Yun</p>
+      <p>And if you think the app has been useful, then you can thank me by dumping your life savings into the PTA group donation box. :)</p>
     </section>`;
 }
 
@@ -285,9 +285,16 @@ function listView() {
     <div class="azlist" role="list">${rows}</div>`;
 }
 
+function imgFail(el) {
+  const p = document.createElement('p');
+  p.className = 'noimg';
+  p.textContent = 'Image not found: ' + el.getAttribute('src');
+  el.replaceWith(p);
+}
+
 /* ---------- Flashcards ---------- */
 function pic(m, cls) {
-  return pics && m.img ? `<img class="${cls}" src="${m.img}" alt="${m.name} diagram" loading="lazy" onerror="this.outerHTML='<p class=\\'noimg\\'>Image not found: ' + this.getAttribute('src') + '</p>'">` : '';
+  return pics && m.img ? `<img class="${cls}" src="${m.img}" alt="${m.name} diagram" loading="lazy" onerror="imgFail(this)">` : '';
 }
 const alias = m => m.sub ? `<span class="alias">${m.sub}</span>` : '';
 function detail(m, withPic) {
@@ -443,7 +450,7 @@ function quizView() {
       <span class="pill">First try: ${S.score}/${S.total}${S.total ? ' · ' + pct + '%' : ''}${S.streak > 1 ? ' · 🔥' + S.streak : ''}</span></div>
     ${fin ? `<div class="prog" role="progressbar" aria-valuemin="1" aria-valuemax="${S.qlen}" aria-valuenow="${S.qn}"><i style="width:${S.qn / S.qlen * 100}%"></i></div>` : ''}
     <p class="count" style="margin:0">${fin ? `Question ${S.qn} of ${S.qlen}` : `Question ${S.qn} · Endless Mode`}</p>
-    ${q.type === 'label' ? `<section class="card q lab"><div class="qq"><p>Which <b>muscle</b> is highlighted?</p>${q.m.img ? `<img class="lq" src="${q.m.img}" alt="Muscle diagram" onerror="this.outerHTML='<p class=\\'noimg\\'>Image not found: ' + this.getAttribute('src') + '</p>'">` : '<p class="noimg">No image for this muscle</p>'}<span class="tag">Day ${q.day}</span></div></section>` : `<section class="card q${S.qpop ? ' pop' : ''}" data-act="qflip" role="button" tabindex="0" aria-label="${S.qflip ? 'Back to question' : 'Show flash card'}">
+    ${q.type === 'label' ? `<section class="card q lab"><div class="qq"><p>Which <b>muscle</b> is highlighted?</p>${q.m.img ? `<img class="lq" src="${q.m.img}" alt="Muscle diagram" onerror="imgFail(this)">` : '<p class="noimg">No image for this muscle</p>'}<span class="tag">Day ${q.day}</span></div></section>` : `<section class="card q${S.qpop ? ' pop' : ''}" data-act="qflip" role="button" tabindex="0" aria-label="${S.qflip ? 'Back to question' : 'Show flash card'}">
       ${S.qflip
         ? `<div class="back-face">${detail(q.m, true)}</div><span class="qnote ret">Click to return to question</span>`
         : `<div class="qq"><p>What is the <b>${q.prop}</b> of the:</p><h2>${q.muscle}?${alias(q.m)}</h2><span class="qnote">Click for Flash Card</span><span class="tag">Day ${q.day}</span></div>`}
