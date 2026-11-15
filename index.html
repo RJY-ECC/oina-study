@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#1e3a8a">
 <title>OINA Master Study App</title>
 <style>
@@ -10,7 +10,8 @@
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1220;--card:#162033;--ink:#e5e9f0;--mute:#94a3b8;--line:#263349;--soft:#243047;--brand:#3b82f6;--head:#bfdbfe;--ok:#4ade80;--okbg:#14532d;--bad:#f87171;--badbg:#7f1d1d;--amber:#422006;--amberi:#fcd34d;--purp:#2e1065;--purpi:#c4b5fd;--o:#f87171;--i:#60a5fa;--n:#facc15;--a:#4ade80}}
 :root[data-theme="dark"]{color-scheme:dark;--bg:#0b1220;--card:#162033;--ink:#e5e9f0;--mute:#94a3b8;--line:#263349;--soft:#243047;--brand:#3b82f6;--head:#bfdbfe;--ok:#4ade80;--okbg:#14532d;--bad:#f87171;--badbg:#7f1d1d;--amber:#422006;--amberi:#fcd34d;--purp:#2e1065;--purpi:#c4b5fd;--o:#f87171;--i:#60a5fa;--n:#facc15;--a:#4ade80}
 :root[data-theme="light"]{color-scheme:light}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;touch-action:pan-x pan-y}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-user-select:none;user-select:none;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 .wrap{max-width:30rem;min-height:100dvh;margin:0 auto;padding:1rem;display:flex;flex-direction:column}
 #app{flex:1;display:flex;flex-direction:column;gap:.9rem}
@@ -266,8 +267,8 @@ function noteView() {
   app.innerHTML = `
     <div class="bar"><button class="back" data-act="menu">← Menu</button></div>
     <section class="card notepage">
-      <p>If you have suggestions that can better the app, whether it’s a feature or if details are written poorly, let me know, and I’ll try to optimize it. - Ryan Yun</p>
-      <p>And if you think the app has been useful, then you can thank me by dumping your life savings into the PTA group donation box. :)</p>
+      <p>If you think there is something that can be better or written wrong, please let me know. - Ryan Yun.</p>
+      <p>And if you think this app/site has been helpful then you can thank me by buying me a coffee via PTA group donation.</p>
     </section>`;
 }
 
@@ -535,6 +536,9 @@ hero.addEventListener('click', e => {
   const b = e.target.closest('[data-act]');
   if (b && act[b.dataset.act]) act[b.dataset.act](b.dataset.v);
 });
+
+/* Disable all zoom (iOS Safari ignores user-scalable, so block its gesture events too) */
+["gesturestart","gesturechange","gestureend"].forEach(t => document.addEventListener(t, e => e.preventDefault()));
 
 /* Swipe on flashcards */
 let tx = null;
