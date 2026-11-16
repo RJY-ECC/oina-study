@@ -184,7 +184,17 @@ const muscles = [
   { day: 7, name: "Quadratus Lumborum", sub: "Hip Hiker", img: "images/quadratus-lumborum.jpg", o: "Posterior iliac crest, iliolumbar ligament", i: "Lower border of 12th rib, transverse processes of L1–L4", n: "T12, L1–L4", a: "Depresses 12th rib, lateral flexion of trunk, hip hiking", notes: ["Associated with back pain"] },
   { day: 7, name: "External Intercostals", img: "images/external-intercostals.jpg", o: "Inferior border of rib above", i: "Superior border of rib below", n: "Intercostal nerves", a: "Elevates ribs during inspiration" },
   { day: 7, name: "Internal Intercostals", img: "images/internal-intercostals.jpg", o: "Superior border of rib below", i: "Inferior border of rib above", n: "Intercostal nerves", a: "Depresses ribs during forced expiration" },
-  { day: 7, name: "Diaphragm", img: "images/diaphragm.jpg", o: "Xiphoid process, lower 6 ribs, lumbar spine (L1–L3 crura)", i: "Central tendon", n: "Phrenic nerve (C3, C4, C5)", a: "Increases vital inspiration (primary muscle of inspiration)", notes: ["C3, 4, 5 keeps the diaphragm alive"] }
+  { day: 7, name: "Diaphragm", img: "images/diaphragm.jpg", o: "Xiphoid process, lower 6 ribs, lumbar spine (L1–L3 crura)", i: "Central tendon", n: "Phrenic nerve (C3, C4, C5)", a: "Increases vital inspiration (primary muscle of inspiration)", notes: ["C3, 4, 5 keeps the diaphragm alive"] },
+  { day: 8, name: "Psoas Major", img: "images/psoas-major.jpg", o: "Bodies and transverse processes of lumbar vertebrae", i: "Lesser trochanter", n: "Lumbar plexus L1, <b>2, 3, 4</b>", a: "With the origin fixed: Flex the hip (coxal joint). May laterally rotate the hip (coxal joint). With the insertion fixed: Flex the trunk toward the thigh. Tilt pelvis anteriorly. Unilaterally: Assist to laterally flex the lumbar spine" },
+  { day: 8, name: "Psoas Minor", img: "images/psoas-minor.jpg", o: "Body and transverse process of first lumbar vertebra", i: "Superior ramus of pubis", n: "Lumbar plexus L<b>1, 2</b>", a: "Assist to create lordotic curvature in the lumbar spine. Tilt pelvis posteriorly" },
+  { day: 8, name: "Iliacus", img: "images/iliacus.jpg", o: "Iliac fossa", i: "Lesser trochanter", n: "Femoral L(1), <b>2, 3, 4</b>", a: "With the origin fixed: Flex the hip (coxal joint). May laterally rotate the hip (coxal joint). With the insertion fixed: Flex the trunk toward the thigh. Tilt pelvis anteriorly" },
+  { day: 8, name: "Sartorius", img: "images/sartorius.jpg", o: "Anterior superior iliac spine (ASIS)", i: "Proximal, medial shaft of the tibia at pes anserinus tendon", n: "Femoral L<b>2, 3</b>, (4)", a: "Flex the hip (coxal joint). Laterally rotate the hip (coxal joint). Abduct the hip (coxal joint). Flex the knee (tibiofemoral joint). Medially rotate the flexed knee (T/F joint)" },
+  { day: 8, name: "Vastus Medialis", img: "images/vastus-medialis.jpg", o: "Medial lip of linea aspera", i: "Tibial tuberosity (via the patella and patellar ligament)", n: "Femoral L<b>2, 3, 4</b>", a: "Extend the knee (tibiofemoral joint)" },
+  { day: 8, name: "Vastus Lateralis", img: "images/vastus-lateralis.jpg", o: "Lateral lip of linea aspera, gluteal tuberosity and greater trochanter", i: "Tibial tuberosity (via the patella and patellar ligament)", n: "Femoral L<b>2, 3, 4</b>", a: "Extend the knee (tibiofemoral joint)" },
+  { day: 8, name: "Vastus Intermedius", img: "images/vastus-intermedius.jpg", o: "Anterior and lateral shaft of the femur", i: "Tibial tuberosity (via the patella and patellar ligament)", n: "Femoral L<b>2, 3, 4</b>", a: "Extend the knee (tibiofemoral joint)" },
+  { day: 8, name: "Rectus Femoris", img: "images/rectus-femoris.jpg", o: "Anterior inferior iliac spine (AIIS)", i: "Tibial tuberosity (via the patella and patellar ligament)", n: "Femoral L<b>2, 3, 4</b>", a: "Extend the knee (tibiofemoral joint). Flex the hip (coxal joint)" },
+  { day: 8, name: "Serratus Posterior Superior", img: "images/serratus-posterior-superior.jpg", o: "Spinous processes of C-7 to T-3", i: "Posterior surface of second through fifth ribs", n: "T<b>1, 2, 3, 4</b>", a: "Elevate the ribs during inhalation" },
+  { day: 8, name: "Serratus Posterior Inferior", img: "images/serratus-posterior-inferior.jpg", o: "Spinous processes of T-12 to L-3", i: "Posterior surface of ninth through twelfth ribs", n: "T<b>9, 10, 11</b>, (12)", a: "Depress the ribs during exhalation" }
 ];
 
 const $ = s => document.querySelector(s), app = $('#app'), hero = $('#hero');
@@ -198,7 +208,7 @@ const theme = store.get('oina_theme', null);
 if (theme) root.dataset.theme = theme;
 const isDark = () => (root.dataset.theme || (mq.matches ? 'dark' : 'light')) === 'dark';
 const PROPS = { o: 'Origin', i: 'Insertion', n: 'Nerve', a: 'Action' };
-const DAYS = [1, 2, 3, 4, 5, 6, 7];
+const DAYS = [1, 2, 3, 4, 5, 6, 7, 8];
 function normFilter(v) {
   if (v === 'removed') return 'removed';
   if (v === 'all') return DAYS.slice();
@@ -240,7 +250,7 @@ function menuView() {
   app.innerHTML = `
     <section class="card">
       <p class="label">Study set · tap to select multiple days</p>
-      <div class="seg">${seg('1', 'Day 1')}${seg('2', 'Day 2')}${seg('3', 'Day 3')}${seg('4', 'Day 4')}${seg('5', 'Day 5')}${seg('6', 'Day 6')}${seg('7', 'Day 7')}${seg('all', 'All')}</div>
+      <div class="seg">${seg('1', 'Day 1')}${seg('2', 'Day 2')}${seg('3', 'Day 3')}${seg('4', 'Day 4')}${seg('5', 'Day 5')}${seg('6', 'Day 6')}${seg('7', 'Day 7')}${seg('8', 'Day 8')}${seg('all', 'All')}</div>
       <div class="seg" style="margin-top:.7rem">${seg('removed', '🚫 Removed (' + removed.length + ')', ' style="padding:.8rem .3rem;font-size:.85rem"')}<button data-act="azlist" style="padding:.8rem .3rem;font-size:.85rem">🔍 A–Z list</button></div>
       <p class="count">${n} muscle${n === 1 ? '' : 's'} selected${!n ? (f === 'removed' ? ' — no cards have been removed yet' : ' — select at least one day') : ''}</p>
     </section>
@@ -338,6 +348,9 @@ function cardsView() {
 
 /* ---------- Quiz ---------- */
 const GROUPS = [
+  ['Psoas Major', 'Psoas Minor', 'Iliacus', 'Sartorius', 'Rectus Femoris'],
+  ['Vastus Medialis', 'Vastus Lateralis', 'Vastus Intermedius', 'Rectus Femoris'],
+  ['Serratus Posterior Superior', 'Serratus Posterior Inferior', 'Serratus Anterior', 'External Intercostals', 'Internal Intercostals', 'Diaphragm'],
   ['Sternocleidomastoid', 'Anterior Scalene', 'Middle Scalene', 'Posterior Scalene', 'Levator Scapula', 'Splenius Cervicis', 'Splenius Capitis'],
   ['Oblique Capitis Superior', 'Oblique Capitis Inferior', 'Rectus Capitis Posterior Minor', 'Rectus Capitis Posterior Major', 'Rectus Capitis Anterior', 'Rectus Capitis Lateralis'],
   ['Longus Capitis', 'Longus Colli', 'Rectus Capitis Anterior', 'Rectus Capitis Lateralis', 'Anterior Scalene'],
