@@ -182,8 +182,8 @@ const muscles = [
   { day: 7, name: "Internal Oblique", img: "images/internal-oblique.jpg", o: "Thoracolumbar fascia, inguinal ligament, iliac crest", i: "Last 3 ribs, linea alba", n: "T7–T12, L1", a: "Compresses abdomen, forced expiration, ipsilateral rotation (rotates to same side)" },
   { day: 7, name: "Transverse Abdominis", sub: "Kegel", img: "images/transverse-abdominis.jpg", o: "Lower 6 costal cartilages, thoracolumbar fascia, inguinal ligament, iliac crest", i: "Linea alba, pubic crest", n: "T7–T12, L1", a: "Compresses abdominal contents (primary deep stabilizer)" },
   { day: 7, name: "Quadratus Lumborum", sub: "Hip Hiker", img: "images/quadratus-lumborum.jpg", o: "Posterior iliac crest, iliolumbar ligament", i: "Lower border of 12th rib, transverse processes of L1–L4", n: "T12, L1–L4", a: "Depresses 12th rib, lateral flexion of trunk, hip hiking", notes: ["Associated with back pain"] },
-  { day: 7, name: "External Intercostals", img: "images/external-intercostals.jpg", o: "Inferior border of rib above", i: "Superior border of rib below", n: "Intercostal nerves", a: "Elevates ribs during inspiration" },
-  { day: 7, name: "Internal Intercostals", img: "images/internal-intercostals.jpg", o: "Superior border of rib below", i: "Inferior border of rib above", n: "Intercostal nerves", a: "Depresses ribs during forced expiration" },
+  { day: 7, name: "External Intercostals", img: "images/external-intercostals.jpg", o: "Inferior border of the rib above", i: "Superior border of the rib below", n: "Intercostal nerves", a: "Elevates ribs during inspiration" },
+  { day: 7, name: "Internal Intercostals", img: "images/internal-intercostals.jpg", o: "Inferior border of the rib above", i: "Superior border of the rib below", n: "Intercostal nerves", a: "Depresses ribs during forced expiration" },
   { day: 7, name: "Diaphragm", img: "images/diaphragm.jpg", o: "Xiphoid process, lower 6 ribs, lumbar spine (L1–L3 crura)", i: "Central tendon", n: "Phrenic nerve (C3, C4, C5)", a: "Increases vital inspiration (primary muscle of inspiration)", notes: ["C3, 4, 5 keeps the diaphragm alive"] },
   { day: 8, name: "Psoas Major", img: "images/psoas-major.jpg", o: "Transverse processes and bodies of all lumbar vertebrae", i: "Lesser trochanter", n: "Lumbar plexus L2, 3", a: "Flex the hip. Flex the trunk on the hip. Weak external hip rotator. Weak anterior pelvic tilt", notes: ["Part of the iliopsoas group"] },
   { day: 8, name: "Psoas Minor", img: "images/psoas-minor.jpg", o: "T12 and L1", i: "Pectineal line", n: "Lumbar plexus L1, 2", a: "Flex the hip. Flex the trunk on the hip. Assist lumbar lordosis. Weak posterior pelvic tilt", notes: ["Part of the iliopsoas group"] },
@@ -194,7 +194,17 @@ const muscles = [
   { day: 8, name: "Vastus Intermedius", img: "images/vastus-intermedius.jpg", o: "Lower 2/3 of anterior femur, linea aspera", i: "Tibial tuberosity", n: "Femoral nerve", a: "Extend the knee", notes: ["Quad muscle"] },
   { day: 8, name: "Rectus Femoris", img: "images/rectus-femoris.jpg", o: "AIIS", i: "Tibial tuberosity (via patellar tendon)", n: "Femoral nerve", a: "Strong knee extension. Weak hip flexion", notes: ["Quad muscle", "2-joint muscle"] },
   { day: 8, name: "Serratus Posterior Superior", img: "images/serratus-posterior-superior.jpg", o: "Spinous processes of C-7 to T-3", i: "Posterior surface of second through fifth ribs", n: "T<b>1, 2, 3, 4</b>", a: "Elevate the ribs during inhalation" },
-  { day: 8, name: "Serratus Posterior Inferior", img: "images/serratus-posterior-inferior.jpg", o: "Spinous processes of T-12 to L-3", i: "Posterior surface of ninth through twelfth ribs", n: "T<b>9, 10, 11</b>, (12)", a: "Depress the ribs during exhalation" }
+  { day: 8, name: "Serratus Posterior Inferior", img: "images/serratus-posterior-inferior.jpg", o: "Spinous processes of T-12 to L-3", i: "Posterior surface of ninth through twelfth ribs", n: "T<b>9, 10, 11</b>, (12)", a: "Depress the ribs during exhalation" },
+  { day: 9, name: "Gluteus Maximus", img: "images/gluteus-maximus.jpg", o: "Coccyx, edge of sacrum, posterior iliac crest, sacrotuberous and sacroiliac ligaments", i: "Iliotibial tract (upper fibers) and gluteal tuberosity (lower fibers)", n: "Inferior gluteal <b>L5, S1, 2</b>", a: "<i>All fibers:</i> Extend the hip (coxal joint). Laterally rotate the hip (coxal joint). Abduct the hip (coxal joint). <i>Lower fibers:</i> Adduct the hip (coxal joint)", notes: ["Cue: \"Extend your hip\"", "Upper fibers insert on the iliotibial tract"] },
+  { day: 9, name: "Gluteus Medius", img: "images/gluteus-medius.jpg", o: "Gluteal surface of ilium, between posterior and anterior gluteal lines, just below the iliac crest", i: "Lateral aspect of greater trochanter", n: "Superior gluteal <b>L4, 5, S1</b>", a: "<i>All fibers:</i> Abduct the hip (coxal joint). <i>Anterior fibers:</i> Flex the hip (coxal joint). Medially rotate the hip (coxal joint). <i>Posterior fibers:</i> Extend the hip (coxal joint). Laterally rotate the hip (coxal joint)", notes: ["Cue: \"Abduct your hip\""] },
+  { day: 9, name: "Gluteus Minimus", img: "images/gluteus-minimus.jpg", o: "Gluteal surface of the ilium between the anterior and inferior gluteal lines", i: "Anterior aspect of greater trochanter", n: "Superior gluteal <b>L4, 5, S1</b>", a: "Abduct the hip (coxal joint). Medially rotate the hip (coxal joint). Flex the hip (coxal joint)", notes: ["Deep to gluteus medius", "Cue: \"Abduct your hip\""] },
+  { day: 9, name: "Tensor Fasciae Latae", sub: "TFL", img: "images/tensor-fasciae-latae.jpg", o: "Iliac crest, posterior to the ASIS", i: "Iliotibial tract", n: "Superior gluteal <b>L4, 5, S1</b>", a: "Flex the hip (coxal joint). Medially rotate the hip (coxal joint). Abduct the hip (coxal joint)", notes: ["Cue: \"Medially rotate your hip\""] },
+  { day: 9, name: "Piriformis", img: "images/piriformis.jpg", o: "Anterior surface of sacrum", i: "Superior aspect of greater trochanter", n: "Sacral plexus L(5), <b>S1, 2</b>", a: "Laterally rotate the hip (coxal joint). Abduct the hip when the hip is flexed", notes: ["Deep to gluteus maximus", "Cue: \"Laterally rotate your hip\""] },
+  { day: 9, name: "Adductor Magnus", img: "images/adductor-magnus.jpg", o: "Ischial tuberosity and rami of pubis and ischium", i: "Medial lip of linea aspera and adductor tubercle", n: "Obturator <b>L2, 3, 4</b> and Sciatic <b>L4, 5, S1</b>", a: "Adduct the hip (coxal joint). Medially rotate the hip (coxal joint). Assist to flex the hip (coxal joint). <i>Posterior fibers:</i> Extend the hip (coxal joint)", notes: ["Adductor group", "Cue: \"Squeeze your thighs together\""] },
+  { day: 9, name: "Adductor Longus", img: "images/adductor-longus.jpg", o: "Pubic symphysis", i: "Medial lip of linea aspera", n: "Obturator <b>L2, 3, 4</b>", a: "Adduct the hip (coxal joint). Medially rotate the hip (coxal joint). Assist to flex the hip (coxal joint)", notes: ["Adductor group", "Cue: \"Squeeze your thighs together\""] },
+  { day: 9, name: "Adductor Brevis", img: "images/adductor-brevis.jpg", o: "Inferior ramus of pubis", i: "Pectineal line and medial lip of linea aspera", n: "Obturator <b>L2, 3, 4</b>", a: "Adduct the hip (coxal joint). Medially rotate the hip (coxal joint). Assist to flex the hip (coxal joint)", notes: ["Adductor group", "Cue: \"Squeeze your thighs together\""] },
+  { day: 9, name: "Pectineus", img: "images/pectineus.jpg", o: "Superior ramus of pubis", i: "Lesser trochanter of linea aspera", n: "Femoral", a: "Adduct the hip (coxal joint). Medially rotate the hip (coxal joint). Assist to flex the hip (coxal joint)", notes: ["Adductor group", "Dual innervation: femoral + obturator", "Cue: \"Squeeze your thighs together\""] },
+  { day: 9, name: "Gracilis", img: "images/gracilis.jpg", o: "Pubic symphysis", i: "Proximal, medial shaft of tibia at pes anserinus tendon", n: "Obturator <b>L2, 3, 4</b>", a: "Adduct the hip (coxal joint). Medially rotate the hip (coxal joint). Flex the knee (tibiofemoral joint). Medially rotate the flexed knee (T/F joint)", notes: ["Adductor group", "Pes anserinus (goosefoot) = Sartorius + Gracilis + Semitendinosus", "Cue: \"Squeeze your thighs together\""] }
 ];
 
 const $ = s => document.querySelector(s), app = $('#app'), hero = $('#hero');
@@ -208,7 +218,7 @@ const theme = store.get('oina_theme', null);
 if (theme) root.dataset.theme = theme;
 const isDark = () => (root.dataset.theme || (mq.matches ? 'dark' : 'light')) === 'dark';
 const PROPS = { o: 'Origin', i: 'Insertion', n: 'Nerve', a: 'Action' };
-const DAYS = [1, 2, 3, 4, 5, 6, 7, 8];
+const DAYS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 function normFilter(v) {
   if (v === 'removed') return 'removed';
   if (v === 'all') return DAYS.slice();
@@ -250,7 +260,7 @@ function menuView() {
   app.innerHTML = `
     <section class="card">
       <p class="label">Study set · tap to select multiple days</p>
-      <div class="seg">${seg('1', 'Day 1')}${seg('2', 'Day 2')}${seg('3', 'Day 3')}${seg('4', 'Day 4')}${seg('5', 'Day 5')}${seg('6', 'Day 6')}${seg('7', 'Day 7')}${seg('8', 'Day 8')}${seg('all', 'All')}</div>
+      <div class="seg">${seg('1', 'Day 1')}${seg('2', 'Day 2')}${seg('3', 'Day 3')}${seg('4', 'Day 4')}${seg('5', 'Day 5')}${seg('6', 'Day 6')}${seg('7', 'Day 7')}${seg('8', 'Day 8')}${seg('9', 'Day 9')}${seg('all', 'All')}</div>
       <div class="seg" style="margin-top:.7rem">${seg('removed', '🚫 Removed (' + removed.length + ')', ' style="padding:.8rem .3rem;font-size:.85rem"')}<button data-act="azlist" style="padding:.8rem .3rem;font-size:.85rem">🔍 A–Z list</button></div>
       <p class="count">${n} muscle${n === 1 ? '' : 's'} selected${!n ? (f === 'removed' ? ' — no cards have been removed yet' : ' — select at least one day') : ''}</p>
     </section>
@@ -369,7 +379,13 @@ const GROUPS = [
   ['Lumbricals', 'Dorsal Interossei', 'Palmar Interossei'],
   ['Rectus Abdominis', 'External Oblique', 'Internal Oblique', 'Transverse Abdominis', 'Quadratus Lumborum'],
   ['External Oblique', 'Internal Oblique', 'External Intercostals', 'Internal Intercostals'],
-  ['External Intercostals', 'Internal Intercostals', 'Diaphragm']
+  ['External Intercostals', 'Internal Intercostals', 'Diaphragm'],
+  ['Gluteus Maximus', 'Gluteus Medius', 'Gluteus Minimus', 'Tensor Fasciae Latae', 'Piriformis'],
+  ['Gluteus Medius', 'Gluteus Minimus', 'Tensor Fasciae Latae', 'Piriformis'],
+  ['Adductor Magnus', 'Adductor Longus', 'Adductor Brevis', 'Pectineus', 'Gracilis'],
+  ['Adductor Longus', 'Adductor Brevis', 'Pectineus'],
+  ['Pectineus', 'Psoas Major', 'Iliacus', 'Sartorius', 'Rectus Femoris', 'Tensor Fasciae Latae'],
+  ['Sartorius', 'Gracilis']
 ];
 function similarNames(t) {
   // muscles sharing the most groups with t come first (random tie-break), then same day, then anything
