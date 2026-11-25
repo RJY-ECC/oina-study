@@ -215,7 +215,12 @@ const muscles = [
   { day: 10, name: "Tibialis Anterior", img: "images/tibialis-anterior.jpg", o: "Lateral condyle of tibia; proximal, lateral surface of tibia and interosseous membrane", i: "Medial cuneiform and base of the first metatarsal", n: "Deep peroneal <b>L4, 5, S1</b>", a: "Invert the foot. Dorsiflex the ankle (talocrural joint)" },
   { day: 10, name: "Extensor Digitorum Longus", img: "images/extensor-digitorum-longus.jpg", o: "Lateral condyle of tibia; proximal, anterior shaft of fibula and interosseous membrane", i: "Middle and distal phalanges of second through fifth toes", n: "Peroneal <b>L4, 5, S1</b>", a: "Extend the second through fifth toes (metatarsophalangeal and interphalangeal joints). Dorsiflex the ankle (talocrural joint). Evert the foot" },
   { day: 10, name: "Extensor Hallucis Longus", img: "images/extensor-hallucis-longus.jpg", o: "Middle anterior surface of fibula and interosseous membrane", i: "Distal phalanx of first toe", n: "Deep peroneal <b>L4, 5, S1</b>", a: "Extend the first toe (metatarsophalangeal and interphalangeal joints). Dorsiflex the ankle (talocrural joint). Invert the foot" },
-  { day: 10, name: "Fibularis Tertius", img: "images/fibularis-tertius.jpg", o: "Medial surface (distal third) of fibula, interosseous membrane (anterior surface), anterior intermuscular septum", i: "Dorsal surface of base of metatarsal bone 5", n: "Deep peroneal <b>L5, S1</b>", a: "Dorsiflex the ankle (talocrural joint). Evert the foot (subtalar joint)" }
+  { day: 10, name: "Fibularis Tertius", img: "images/fibularis-tertius.jpg", o: "Medial surface (distal third) of fibula, interosseous membrane (anterior surface), anterior intermuscular septum", i: "Dorsal surface of base of metatarsal bone 5", n: "Deep peroneal <b>L5, S1</b>", a: "Dorsiflex the ankle (talocrural joint). Evert the foot (subtalar joint)" },
+  { day: 11, name: "Flexor Hallucis Longus", img: "images/flexor-hallucis-longus.jpg", o: "Middle half of posterior fibula", i: "Distal phalanx of first toe", n: "Tibial L<b>5</b>, S1, <b>2</b>", a: "Flex the first toe (metatarsophalangeal and interphalangeal joints). Weak plantar flexion of ankle (talocrural joint). Invert the foot" },
+  { day: 11, name: "Peroneus Longus", sub: "(Fibularis Longus)", img: "images/peroneus-longus.jpg", o: "Head of fibula and proximal two-thirds of lateral fibula", i: "Base of the first metatarsal and medial cuneiform", n: "Superficial peroneal L4, <b>5</b>, S1", a: "Evert the foot. Assist to plantar flex the ankle (talocrural joint)" },
+  { day: 11, name: "Flexor Digitorum Longus", img: "images/flexor-digitorum-longus.jpg", o: "Middle, posterior surface of tibia", i: "Distal phalanges of second through fifth toes", n: "Tibial L<b>5</b>, S1, (2)", a: "Flex the second through fifth toes (metatarsophalangeal and interphalangeal joints). Weak plantar flexion of ankle (talocrural joint). Invert the foot" },
+  { day: 11, name: "Tibialis Posterior", img: "images/tibialis-posterior.jpg", o: "Proximal, posterior shafts of tibia and fibula; and interosseous membrane", i: "All five tarsal bones and bases of second through fourth metatarsals", n: "Tibial L(4), <b>5</b>, S1", a: "Invert the foot. Plantar flex the ankle (talocrural joint)" },
+  { day: 11, name: "Peroneus Brevis", sub: "(Fibularis Brevis)", img: "images/peroneus-brevis.jpg", o: "Distal two-thirds of lateral fibula", i: "Tuberosity of fifth metatarsal", n: "Superficial peroneal L4, <b>5</b>, S1", a: "Evert the foot. Assist to plantar flex the ankle (talocrural joint)" }
 ];
 
 const $ = s => document.querySelector(s), app = $('#app'), hero = $('#hero');
@@ -229,7 +234,7 @@ const theme = store.get('oina_theme', null);
 if (theme) root.dataset.theme = theme;
 const isDark = () => (root.dataset.theme || (mq.matches ? 'dark' : 'light')) === 'dark';
 const PROPS = { o: 'Origin', i: 'Insertion', n: 'Nerve', a: 'Action' };
-const DAYS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+const DAYS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 function normFilter(v) {
   if (v === 'removed') return 'removed';
   if (v === 'all') return DAYS.slice();
@@ -271,7 +276,7 @@ function menuView() {
   app.innerHTML = `
     <section class="card">
       <p class="label">Study set · tap to select multiple days</p>
-      <div class="seg">${seg('1', 'Day 1')}${seg('2', 'Day 2')}${seg('3', 'Day 3')}${seg('4', 'Day 4')}${seg('5', 'Day 5')}${seg('6', 'Day 6')}${seg('7', 'Day 7')}${seg('8', 'Day 8')}${seg('9', 'Day 9')}${seg('10', 'Day 10')}${seg('all', 'All')}</div>
+      <div class="seg">${seg('1', 'Day 1')}${seg('2', 'Day 2')}${seg('3', 'Day 3')}${seg('4', 'Day 4')}${seg('5', 'Day 5')}${seg('6', 'Day 6')}${seg('7', 'Day 7')}${seg('8', 'Day 8')}${seg('9', 'Day 9')}${seg('10', 'Day 10')}${seg('11', 'Day 11')}${seg('all', 'All')}</div>
       <div class="seg" style="margin-top:.7rem">${seg('removed', '🚫 Removed (' + removed.length + ')', ' style="padding:.8rem .3rem;font-size:.85rem"')}<button data-act="azlist" style="padding:.8rem .3rem;font-size:.85rem">🔍 A–Z list</button></div>
       <p class="count">${n} muscle${n === 1 ? '' : 's'} selected${!n ? (f === 'removed' ? ' — no cards have been removed yet' : ' — select at least one day') : ''}</p>
     </section>
@@ -401,7 +406,11 @@ const GROUPS = [
   ['Gastrocnemius', 'Soleus', 'Plantaris'],
   ['Tibialis Anterior', 'Extensor Digitorum Longus', 'Extensor Hallucis Longus', 'Fibularis Tertius'],
   ['Extensor Digitorum Longus', 'Extensor Hallucis Longus'],
-  ['Biceps Femoris', 'Semimembranosus', 'Semitendinosus', 'Gastrocnemius', 'Plantaris', 'Popliteus', 'Gracilis', 'Sartorius']
+  ['Biceps Femoris', 'Semimembranosus', 'Semitendinosus', 'Gastrocnemius', 'Plantaris', 'Popliteus', 'Gracilis', 'Sartorius'],
+  ['Peroneus Longus', 'Peroneus Brevis', 'Fibularis Tertius'],
+  ['Tibialis Posterior', 'Flexor Digitorum Longus', 'Flexor Hallucis Longus'],
+  ['Flexor Hallucis Longus', 'Flexor Digitorum Longus', 'Extensor Hallucis Longus', 'Extensor Digitorum Longus'],
+  ['Tibialis Posterior', 'Tibialis Anterior', 'Peroneus Longus', 'Peroneus Brevis']
 ];
 function similarNames(t) {
   // muscles sharing the most groups with t come first (random tie-break), then same day, then anything
